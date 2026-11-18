@@ -35,6 +35,29 @@
     }
   }
 
+
+  /* mockup: .reveal — sekcje wjeżdżają przy wejściu w widok (scroll-driven) */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        animation: reveal-rise linear both;
+        animation-timeline: view();
+        animation-range: entry 5% entry 40%;
+      }
+    }
+  }
+
+  @keyframes reveal-rise {
+    from {
+      opacity: 0;
+      translate: 0 32px;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
   /* Popover / dialog entrance when supported */
   @supports (overlay: auto) {
     [popover]:popover-open {

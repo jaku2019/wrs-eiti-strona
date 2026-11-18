@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   ArrowRight,
+  ArrowUpRight,
   BookOpen,
   Calendar,
   Check,
@@ -23,6 +24,7 @@ import {
   Menu,
   Moon,
   Notebook,
+  RefreshCw,
   Scale,
   ScrollText,
   Search,
@@ -36,6 +38,7 @@ import {
 
 const icons = {
   arrowRight: ArrowRight,
+  arrowUpRight: ArrowUpRight,
   bookOpen: BookOpen,
   calendar: Calendar,
   check: Check,
@@ -58,6 +61,7 @@ const icons = {
   menu: Menu,
   moon: Moon,
   notebook: Notebook,
+  refresh: RefreshCw,
   scale: Scale,
   scrollText: ScrollText,
   search: Search,

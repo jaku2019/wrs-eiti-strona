@@ -33,28 +33,28 @@ withDefaults(
 </template>
 
 <style scoped>
+/* mockup: .link */
 .ui-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 6px;
   color: var(--link);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 15px;
-  text-decoration: none;
+  text-decoration: underline 1px transparent;
+  text-underline-offset: 5px;
+  transition: text-decoration-color 0.25s;
 }
 
 .ui-link__text {
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 5px;
-  transition: text-decoration-color 0.2s ease;
+  text-decoration: inherit;
 }
 
 .ui-link :deep(.ui-icon) {
-  transition: transform 0.2s ease;
+  transition: transform 0.3s var(--ease);
 }
 
-.ui-link:hover .ui-link__text {
+.ui-link:hover {
   text-decoration-color: currentColor;
 }
 
@@ -63,7 +63,7 @@ withDefaults(
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-link__text,
+  .ui-link,
   .ui-link :deep(.ui-icon) {
     transition: none;
   }
