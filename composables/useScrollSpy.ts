@@ -1,12 +1,19 @@
 /**
  * Scroll-spy: active section via IntersectionObserver.
  * rootMargin matches design system: -35% top / -60% bottom.
+ * Pass `stateKey` when multiple spies coexist (navbar vs KB TOC).
  */
 export function useScrollSpy(
   sectionIds: MaybeRefOrGetter<string[]>,
-  options?: { enabled?: MaybeRefOrGetter<boolean> },
+  options?: {
+    enabled?: MaybeRefOrGetter<boolean>
+    stateKey?: string
+  },
 ) {
-  const activeId = useState<string | null>('wrs-scroll-spy-active', () => null)
+  const activeId = useState<string | null>(
+    options?.stateKey ?? 'wrs-scroll-spy-active',
+    () => null,
+  )
 
   onMounted(() => {
     if (!import.meta.client) return

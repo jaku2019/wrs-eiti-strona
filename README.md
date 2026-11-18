@@ -83,9 +83,16 @@ Znaki WRS w `public/brand/` (z Context `media/brand/`). Emblemat wydziału tylko
 
 Zdjęcia składu: placeholdery z inicjałów (`UiAvatarPlaceholder`) do czasu zgód RODO.
 
+## Strony treści (A4c)
+
+- `/aktualnosci` + `/aktualnosci/<slug>` — lista (filtr draft/dat), wpis, `og:*`, kopiowanie linku  
+- `/baza-wiedzy` + `/baza-wiedzy/<kategoria>/<slug>` — kategorie, TOC ze scroll-spy, powiązane, postęp czytania  
+- `/dokumenty` — filtry typu i roku z `content/dokumenty.yml`  
+- Zajawka aktualności: plugin `server/plugins/preserve-excerpt.ts` (Content nadpisuje frontmatter `excerpt`)
+
 ## Kolejne kamienie
 
-- **A4** strony merytoryczne (home / skład / KB / …; helpery treści A3)  
+- **A4a/A4b** home+404, skład+FAQ  
 - **A5** Pagefind → podpięcie do Ctrl&nbsp;K  
 - **A6** FB produkcyjnie
 
