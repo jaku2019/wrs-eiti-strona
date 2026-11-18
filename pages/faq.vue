@@ -33,7 +33,7 @@ function allQuestionIds(): Set<string> {
 
 function applyHash(hash: string) {
   const id = hashId(hash)
-  if (!id) return
+  if (!id || !import.meta.client) return
 
   const isQuestion = allQuestionIds().has(id)
   const isSection = sekcje.value.some((s) => s.id === id)
@@ -42,11 +42,14 @@ function applyHash(hash: string) {
   if (isQuestion) {
     revealId.value = id
     revealToken.value += 1
+    const el = document.getElementById(id)
+    if (el instanceof HTMLDetailsElement) el.open = true
   }
 
   nextTick(() => {
     const el = document.getElementById(id)
     if (!el) return
+    if (el instanceof HTMLDetailsElement) el.open = true
     el.scrollIntoView({ behavior: 'smooth', block: 'start' })
   })
 }
@@ -58,7 +61,11 @@ function onOpen(id: string) {
 }
 
 onMounted(() => {
-  applyHash(route.hash)
+  // Prefer window.location — more reliable than route.hash on cold SSG loads.
+  const hash = import.meta.client ? window.location.hash : route.hash
+  applyHash(hash || route.hash)
+  // Second pass after hydration settles.
+  requestAnimationFrame(() => applyHash(window.location.hash || route.hash))
 })
 
 watch(
