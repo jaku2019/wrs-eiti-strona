@@ -55,8 +55,12 @@ const { data: ustawienia } = await useAsyncData('ustawienia-home', () =>
           <li>GitHub Pages workflow (bez FB w deployu)</li>
           <li>Stuby FB / domeny / kalendarza — patrz README</li>
           <li>Placeholdery zdjęć: inicjały (<code>UiAvatarPlaceholder</code>)</li>
+          <li>A3: <code>content/</code> + <code>.pages.yml</code> + filtr draft/dat</li>
         </ul>
-        <UiLink to="/_ui">Galeria komponentów /_ui</UiLink>
+        <p class="hero__actions">
+          <UiLink to="/_ui">Galeria komponentów /_ui</UiLink>
+          <UiLink to="/_content">Smoke treści /_content</UiLink>
+        </p>
       </div>
     </section>
   </div>

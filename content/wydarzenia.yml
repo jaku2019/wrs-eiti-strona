@@ -1,6 +1,9 @@
-# Kalendarz wydarzeń — źródło prawdy w CMS (A0).
-# TODO: później adapter Google Calendar → ICS przy buildzie (nie usuwać tego pliku
-# jako źródła; adapter ma dokładać / synchronizować wpisy, nie zastępować modelu).
+# Kalendarz wydarzeń — źródło prawdy w CMS (A0: wydarzenia.yml).
+#
+# TODO(ICS): później adapter Google Calendar → ICS przy buildzie.
+# Adapter ma dokładać / synchronizować wpisy (lub generować .ics z tego modelu),
+# NIE zastępować `wydarzenia.yml` jako modelu redakcyjnego.
+# Zob. też utils/calendarSource.ts.
 
 wydarzenia:
   - id: przyklad-zebranie
@@ -15,3 +18,9 @@ wydarzenia:
     koniec: 2026-12-03T14:00:00+01:00
     miejsce: "TODO(treść): pokój samorządu"
     tag: dyzur
+  - id: przyklad-wydarzenie
+    tytul: "TODO(treść): wydarzenie otwarte"
+    start: 2026-12-10T18:00:00+01:00
+    koniec: 2026-12-10T20:00:00+01:00
+    miejsce: "TODO(treść): miejsce"
+    tag: wydarzenie

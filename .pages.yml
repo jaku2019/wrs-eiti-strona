@@ -1,5 +1,6 @@
-# Minimalny szkic Pages CMS — pełna konfiguracja w A3 (04-tresci-i-cms.md).
-# Redaktorzy: lista kont GitHub — później (A0).
+# Pages CMS — konfiguracja A3 (docs/04-tresci-i-cms.md).
+# Składnia zweryfikowana z https://pagescms.org/docs/configuration/
+# Redaktorzy (lista kont GitHub) — później (A0 / A7).
 
 media:
   input: public/uploads
@@ -11,14 +12,367 @@ content:
     type: collection
     path: content/aktualnosci
     filename: "{year}-{month}-{day}-{primary}.md"
+    format: yaml-frontmatter
     view:
       fields: [title, date, draft]
-      default: { sort: date, order: desc }
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
     fields:
-      - { name: title, label: Tytuł, type: string, required: true }
-      - { name: date, label: Data publikacji, type: date, options: { time: true } }
-      - { name: excerpt, label: Lead, type: string }
-      - { name: draft, label: Szkic, type: boolean, default: false }
+      - name: title
+        label: Tytuł
+        type: string
+        required: true
+      - name: date
+        label: Data publikacji
+        type: date
+        required: true
+        options:
+          time: true
+          format: "yyyy-MM-dd'T'HH:mm:ssxxx"
+      - name: image
+        label: Zdjęcie
+        type: image
+      - name: excerpt
+        label: Zajawka
+        type: text
+      - name: draft
+        label: Szkic (nie publikuj)
+        type: boolean
+        default: true
+      - name: facebook
+        label: Facebook
+        type: object
+        fields:
+          - name: publish
+            label: Opublikuj na Facebooku
+            type: boolean
+            default: false
+            description: "Zostaw wyłączone do czasu konfiguracji Meta (A6)."
+          - name: text
+            label: Treść posta (puste = zajawka)
+            type: text
+          - name: format
+            label: Format
+            type: select
+            default: photo
+            options:
+              values:
+                - { name: photo, label: Zdjęcie }
+                - { name: link, label: Link }
+          - name: link_in_comment
+            label: Link w pierwszym komentarzu
+            type: boolean
+            default: true
       - name: body
         label: Treść
-        type: markdown
+        type: rich-text
+
+  - name: baza-wiedzy
+    label: Baza wiedzy
+    type: collection
+    path: content/baza-wiedzy
+    subfolders: true
+    filename: "{primary}.md"
+    format: yaml-frontmatter
+    view:
+      fields: [title, category, updated]
+      primary: title
+      sort: [updated, title]
+      default:
+        sort: updated
+        order: desc
+      layout: tree
+    fields:
+      - name: title
+        label: Tytuł
+        type: string
+        required: true
+      - name: category
+        label: Kategoria
+        type: select
+        required: true
+        options:
+          values:
+            - { name: regulaminy, label: Regulaminy }
+            - { name: wnioski, label: Wnioski }
+            - { name: wybory, label: Wybory }
+            - { name: pierwszy-rok, label: Pierwszy rok }
+            - { name: finanse, label: Finanse }
+      - name: summary
+        label: Streszczenie
+        type: text
+      - name: updated
+        label: Data aktualizacji
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: related
+        label: Powiązane (slugi)
+        type: string
+        list: true
+      - name: body
+        label: Treść
+        type: rich-text
+
+  - name: sklad
+    label: Skład samorządu
+    type: file
+    path: content/sklad.yml
+    format: yaml
+    fields:
+      - name: kadencja
+        label: Kadencja
+        type: string
+      - name: aktualizacja
+        label: Data aktualizacji
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: grupy
+        label: Grupy (filtry)
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{label}"
+        fields:
+          - name: id
+            label: ID
+            type: string
+            required: true
+          - name: label
+            label: Etykieta
+            type: string
+            required: true
+      - name: osoby
+        label: Osoby
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{imie}"
+        fields:
+          - name: imie
+            label: Imię i nazwisko
+            type: string
+            required: true
+          - name: funkcja
+            label: Funkcja
+            type: string
+            default: Członek
+            description: "Szeregowa osoba = „Członek” (bez feminatywów / nazwy komisji)."
+          - name: grupa
+            label: Grupa
+            type: select
+            options:
+              values:
+                - { name: prezydium, label: Prezydium }
+                - { name: dydaktyka, label: Dydaktyczna }
+                - { name: socjalna, label: Socjalno-Bytowa }
+                - { name: kultura, label: Kultury i Sportu }
+                - { name: promocja, label: Promocji }
+                - { name: finanse, label: Finansowa }
+                - { name: czlonkowie, label: Członkowie }
+          - name: kluczowa
+            label: Funkcja kluczowa (wyróżnienie)
+            type: boolean
+            default: false
+          - name: zdjecie
+            label: Zdjęcie (opcjonalnie; bez zgody RODO zostaw puste → inicjały)
+            type: image
+      - name: przedstawiciele
+        label: Przedstawiciele
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{organ}"
+        fields:
+          - name: organ
+            label: Organ
+            type: string
+            required: true
+          - name: opis
+            label: Opis
+            type: string
+          - name: osoby
+            label: Osoby (imiona i nazwiska)
+            type: string
+            list: true
+
+  - name: faq
+    label: FAQ
+    type: file
+    path: content/faq.yml
+    format: yaml
+    fields:
+      - name: sekcje
+        label: Sekcje
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{tytul}"
+        fields:
+          - name: id
+            label: ID sekcji (kotwica)
+            type: string
+            required: true
+          - name: tytul
+            label: Tytuł sekcji
+            type: string
+            required: true
+          - name: pytania
+            label: Pytania
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{q}"
+            fields:
+              - name: id
+                label: ID pytania (kotwica)
+                type: string
+                required: true
+                description: "Kotwice linkowane ze strony Skład — nie zmieniać bez aktualizacji linków."
+              - name: q
+                label: Pytanie
+                type: string
+                required: true
+              - name: a
+                label: Odpowiedź (Markdown)
+                type: text
+                required: true
+
+  - name: dokumenty
+    label: Dokumenty
+    type: file
+    path: content/dokumenty.yml
+    format: yaml
+    fields:
+      - name: dokumenty
+        label: Lista dokumentów
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{tytul}"
+        fields:
+          - name: tytul
+            label: Tytuł
+            type: string
+            required: true
+          - name: typ
+            label: Typ
+            type: select
+            required: true
+            options:
+              values:
+                - { name: regulamin, label: Regulamin }
+                - { name: uchwala, label: Uchwała }
+                - { name: protokol, label: Protokół }
+                - { name: sprawozdanie, label: Sprawozdanie }
+          - name: data
+            label: Data
+            type: date
+            options:
+              format: yyyy-MM-dd
+          - name: plik
+            label: Plik PDF
+            type: file
+
+  - name: wydarzenia
+    label: Wydarzenia (kalendarz)
+    type: file
+    path: content/wydarzenia.yml
+    format: yaml
+    fields:
+      - name: wydarzenia
+        label: Wydarzenia
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{tytul}"
+        fields:
+          - name: id
+            label: ID
+            type: string
+            required: true
+          - name: tytul
+            label: Tytuł
+            type: string
+            required: true
+          - name: start
+            label: Początek
+            type: date
+            required: true
+            options:
+              time: true
+              format: "yyyy-MM-dd'T'HH:mm:ssxxx"
+          - name: koniec
+            label: Koniec
+            type: date
+            options:
+              time: true
+              format: "yyyy-MM-dd'T'HH:mm:ssxxx"
+          - name: miejsce
+            label: Miejsce
+            type: string
+          - name: tag
+            label: Tag
+            type: select
+            options:
+              values:
+                - { name: zebranie, label: Zebranie }
+                - { name: dyzur, label: Dyżur }
+                - { name: wydarzenie, label: Wydarzenie }
+                - { name: inne, label: Inne }
+
+  - name: ustawienia
+    label: Ustawienia strony
+    type: file
+    path: content/ustawienia.yml
+    format: yaml
+    fields:
+      - name: kontakt
+        label: Kontakt
+        type: object
+        fields:
+          - name: email
+            label: E-mail
+            type: string
+      - name: social
+        label: Social media
+        type: object
+        fields:
+          - name: facebook
+            label: Facebook (URL)
+            type: string
+      - name: hero
+        label: Hero (strona główna)
+        type: object
+        fields:
+          - name: tytul
+            label: Tytuł (część wyróżniona)
+            type: string
+          - name: opis
+            label: Lead
+            type: text
+      - name: liczniki
+        label: Liczniki (ręczne)
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{etykieta}"
+        fields:
+          - name: etykieta
+            label: Etykieta
+            type: string
+          - name: wartosc
+            label: Wartość
+            type: number

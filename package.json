@@ -9,7 +9,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "fb:dry-run": "DRY_RUN=1 node scripts/publish-facebook.mjs",
-    "fb:list-due": "node scripts/publish-facebook.mjs --list-due"
+    "fb:list-due": "node scripts/publish-facebook.mjs --list-due",
+    "verify:content-filters": "node scripts/verify-content-filters.mjs"
   },
   "dependencies": {
     "@nuxt/content": "^2.13.4",

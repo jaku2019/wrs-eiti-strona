@@ -14,3 +14,12 @@ sekcje:
       - id: funkcje
         q: Za co odpowiada przewodniczący, a za co komisje?
         a: "TODO(treść): podział ról."
+  - id: sprawy
+    tytul: Sprawy studenckie
+    pytania:
+      - id: kontakt
+        q: Jak skontaktować się z samorządem?
+        a: "TODO(treść): kanały kontaktu (e-mail, dyżury) — uzupełnić z ustawienia.yml."
+      - id: wniosek
+        q: Gdzie złożę wniosek / sprawę?
+        a: "TODO(treść): odesłanie do bazy wiedzy / dyżurów."
