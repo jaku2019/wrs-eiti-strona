@@ -1,7 +1,58 @@
 @layer motion {
+  /* Page transitions — navbar/footer stay; main content crossfades. */
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: 0.35s;
+  }
+
+  ::view-transition-old(site-navbar),
+  ::view-transition-new(site-navbar),
+  ::view-transition-old(site-footer),
+  ::view-transition-new(site-footer) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(site-main) {
+    animation: vt-main-out 0.28s ease both;
+  }
+
+  ::view-transition-new(site-main) {
+    animation: vt-main-in 0.32s ease both;
+  }
+
+  @keyframes vt-main-out {
+    to {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+
+  @keyframes vt-main-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  /* Popover / dialog entrance when supported */
+  @supports (overlay: auto) {
+    [popover]:popover-open {
+      transition:
+        opacity 0.18s ease,
+        transform 0.18s ease,
+        overlay 0.18s allow-discrete,
+        display 0.18s allow-discrete;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @starting-style {
+      [popover]:popover-open {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -15,7 +66,9 @@
     }
 
     ::view-transition-old(root),
-    ::view-transition-new(root) {
+    ::view-transition-new(root),
+    ::view-transition-old(site-main),
+    ::view-transition-new(site-main) {
       animation: none !important;
     }
   }
