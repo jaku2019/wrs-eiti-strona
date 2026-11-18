@@ -98,7 +98,11 @@ export default defineNuxtConfig({
   content: {
     highlight: false,
     markdown: {
-      anchorLinks: false,
+      // h2/h3 get ids for KB TOC + deep links (news body rarely uses headings)
+      anchorLinks: {
+        depth: 3,
+        exclude: [1],
+      },
     },
   },
 

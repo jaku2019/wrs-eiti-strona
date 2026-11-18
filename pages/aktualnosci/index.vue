@@ -2,29 +2,43 @@
 useSeoMeta({
   title: 'Aktualności — WRS WEiTI',
   description: 'Aktualności Wydziałowej Rady Samorządu WEiTI.',
+  ogTitle: 'Aktualności — WRS WEiTI',
+  ogDescription: 'Aktualności Wydziałowej Rady Samorządu WEiTI.',
+})
+
+const { data: items } = await usePublishedAktualnosci({
+  key: 'aktualnosci-list',
 })
 </script>
 
 <template>
   <div class="section">
-    <div class="container stub">
+    <div class="container">
+      <LayoutBreadcrumbs
+        :items="[
+          { label: 'Strona główna', to: '/' },
+          { label: 'Aktualności' },
+        ]"
+      />
       <UiEyebrow>Newsy</UiEyebrow>
       <h1>Aktualności</h1>
       <p class="lead">
-        TODO(treść): lista wpisów z <code>content/aktualnosci/</code> (A4).
+        Ogłoszenia i komunikaty Wydziałowej Rady Samorządu WEiTI.
       </p>
-      <UiLink to="/">Wróć na stronę główną</UiLink>
+
+      <NewsList :items="items ?? []" />
     </div>
   </div>
 </template>
 
 <style scoped>
-.stub h1 {
+h1 {
   font-size: clamp(36px, 5vw, 64px);
 }
 
 .lead {
   max-width: 36rem;
   color: var(--muted);
+  margin-bottom: 2rem;
 }
 </style>
