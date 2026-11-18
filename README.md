@@ -92,7 +92,8 @@ Zdjęcia składu: placeholdery z inicjałów (`UiAvatarPlaceholder`) do czasu zg
 
 ## Kolejne kamienie
 
-- **A4a/A4b** home+404, skład+FAQ  
+- **A4a** home + 404  
+- **A4b** skład `/sklad` + FAQ `/faq` (kotwice, placeholdery inicjałów)  
 - **A5** Pagefind → podpięcie do Ctrl&nbsp;K  
 - **A6** FB produkcyjnie
 

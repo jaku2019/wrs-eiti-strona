@@ -131,11 +131,39 @@
     background: linear-gradient(
       135deg,
       transparent 0%,
-      color-mix(in srgb, var(--szafir) 55%, transparent) 45%,
+      color-mix(in srgb, var(--avatar-bar, var(--szafir)) 55%, transparent) 45%,
       color-mix(in srgb, var(--cyjan) 45%, transparent) 100%
     );
     transform: skewX(-18deg);
     pointer-events: none;
+  }
+
+  .avatar-placeholder[data-group='prezydium'] {
+    --avatar-bar: var(--szafir-deep);
+  }
+
+  .avatar-placeholder[data-group='dydaktyka'] {
+    --avatar-bar: var(--szafir);
+  }
+
+  .avatar-placeholder[data-group='socjalna'] {
+    --avatar-bar: var(--wrzos);
+  }
+
+  .avatar-placeholder[data-group='kultura'] {
+    --avatar-bar: var(--cyjan);
+  }
+
+  .avatar-placeholder[data-group='promocja'] {
+    --avatar-bar: color-mix(in srgb, var(--szafir) 70%, var(--wrzos));
+  }
+
+  .avatar-placeholder[data-group='finanse'] {
+    --avatar-bar: var(--grafit);
+  }
+
+  .avatar-placeholder[data-group='czlonkowie'] {
+    --avatar-bar: var(--szafir);
   }
 
   :root[data-theme='dark'] .avatar-placeholder {
