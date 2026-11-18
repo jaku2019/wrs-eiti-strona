@@ -1,0 +1,398 @@
+<script setup lang="ts">
+import type { PriorityNavItem } from '~/composables/usePriorityNav'
+
+const props = defineProps<{
+  items: PriorityNavItem[]
+  /** When true, render as full-screen mobile sheet (≤640). */
+  mobile?: boolean
+  activeHref?: string | null
+  open?: boolean
+}>()
+
+const emit = defineEmits<{
+  close: []
+  'update:open': [value: boolean]
+}>()
+
+const moreBtn = ref<HTMLButtonElement | null>(null)
+const sheet = ref<HTMLElement | null>(null)
+const popoverId = 'nav-more-popover'
+const popoverSupported = ref(false)
+
+const isOpen = computed({
+  get: () => props.open ?? false,
+  set: (v: boolean) => emit('update:open', v),
+})
+
+function isActive(item: PriorityNavItem) {
+  if (!props.activeHref) return false
+  if (item.kind === 'section') {
+    return props.activeHref === item.href || props.activeHref.endsWith(item.href)
+  }
+  return props.activeHref === item.href || props.activeHref.startsWith(`${item.href}/`)
+}
+
+function close() {
+  isOpen.value = false
+  emit('close')
+  // Popover API
+  const el = document.getElementById(popoverId) as HTMLElement & { hidePopover?: () => void } | null
+  el?.hidePopover?.()
+}
+
+function onPopoverToggle(event: Event) {
+  const e = event as ToggleEvent
+  isOpen.value = e.newState === 'open'
+}
+
+function toggleDesktopFallback(event: MouseEvent) {
+  // When Popover API is unavailable, popovertarget is inert — toggle manually.
+  const el = document.getElementById(popoverId) as HTMLElement & {
+    togglePopover?: () => void
+  } | null
+  if (el?.togglePopover) {
+    // Native popovertarget already toggles; avoid double-toggle.
+    return
+  }
+  event.preventDefault()
+  isOpen.value = !isOpen.value
+}
+
+function onItemClick() {
+  close()
+}
+
+function onKeydown(event: KeyboardEvent) {
+  if (event.key === 'Escape' && isOpen.value) {
+    event.preventDefault()
+    close()
+    moreBtn.value?.focus()
+  }
+}
+
+watch(
+  () => props.open,
+  (open) => {
+    if (!import.meta.client || !props.mobile) return
+    document.body.style.overflow = open ? 'hidden' : ''
+  },
+)
+
+onMounted(() => {
+  popoverSupported.value =
+    typeof HTMLElement !== 'undefined' &&
+    typeof HTMLElement.prototype.hidePopover === 'function'
+  window.addEventListener('keydown', onKeydown)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onKeydown)
+  if (import.meta.client) document.body.style.overflow = ''
+})
+
+defineExpose({ moreBtn, sheet })
+</script>
+
+<template>
+  <!-- Desktop / tablet: Popover „Więcej” -->
+  <div v-if="!mobile" class="more">
+    <button
+      ref="moreBtn"
+      type="button"
+      class="more__btn"
+      :class="{ 'more__btn--active': items.some(isActive) }"
+      popovertarget="nav-more-popover"
+      :aria-expanded="isOpen ? 'true' : 'false'"
+      aria-haspopup="true"
+      aria-controls="nav-more-popover"
+      data-nav-more
+      @click="toggleDesktopFallback"
+    >
+      Więcej
+      <UiIcon name="chevronDown" :size="14" />
+    </button>
+    <div
+      :id="popoverId"
+      popover="auto"
+      class="more__panel"
+      :class="{ 'more__panel--fallback-open': isOpen && !popoverSupported }"
+      @toggle="onPopoverToggle"
+    >
+      <ul class="more__list" role="list">
+        <li v-for="item in items" :key="item.id">
+          <NuxtLink
+            v-if="item.kind === 'page'"
+            :to="item.href"
+            class="more__link"
+            :aria-current="isActive(item) ? 'page' : undefined"
+            @click="onItemClick"
+          >
+            <span>{{ item.label }}</span>
+            <UiIcon name="externalLink" :size="14" />
+          </NuxtLink>
+          <a
+            v-else
+            :href="item.href"
+            class="more__link"
+            :aria-current="isActive(item) ? 'true' : undefined"
+            @click="onItemClick"
+          >
+            {{ item.label }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Mobile: full-screen circle reveal -->
+  <div v-else class="mobile">
+    <button
+      ref="moreBtn"
+      type="button"
+      class="mobile__toggle"
+      :aria-expanded="isOpen ? 'true' : 'false'"
+      aria-controls="nav-mobile-sheet"
+      data-nav-more
+      @click="isOpen = !isOpen"
+    >
+      <span>{{ isOpen ? 'Zamknij' : 'Menu' }}</span>
+      <UiIcon :name="isOpen ? 'x' : 'menu'" :size="18" />
+    </button>
+
+    <div
+      id="nav-mobile-sheet"
+      ref="sheet"
+      class="mobile__sheet"
+      :class="{ 'mobile__sheet--open': isOpen }"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Menu nawigacji"
+      :inert="!isOpen"
+    >
+      <nav class="mobile__nav" aria-label="Menu mobilne">
+        <ul class="mobile__list" role="list">
+          <li
+            v-for="(item, index) in items"
+            :key="item.id"
+            class="mobile__item"
+            :style="{ '--i': index }"
+          >
+            <NuxtLink
+              v-if="item.kind === 'page'"
+              :to="item.href"
+              class="mobile__link"
+              :aria-current="isActive(item) ? 'page' : undefined"
+              @click="onItemClick"
+            >
+              {{ item.label }}
+              <UiIcon name="arrowRight" :size="22" />
+            </NuxtLink>
+            <a
+              v-else
+              :href="item.href"
+              class="mobile__link"
+              :aria-current="isActive(item) ? 'true' : undefined"
+              @click="onItemClick"
+            >
+              {{ item.label }}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.more {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.more__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 36px;
+  padding: 0 0.55rem;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.more__btn:hover,
+.more__btn--active {
+  color: var(--link);
+}
+
+.more__panel {
+  margin: 0;
+  padding: 0.4rem;
+  min-width: 11rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--grafit-deep) 12%, transparent);
+
+  /* Anchor near button when Popover API supports it */
+  position-anchor: --nav-more;
+}
+
+/* Fallback when Popover API is missing */
+.more__panel--fallback-open {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  right: 0;
+  z-index: 60;
+  display: block;
+}
+
+.more__btn {
+  anchor-name: --nav-more;
+}
+
+@supports (position-area: block-end span-inline-end) {
+  .more__panel:popover-open {
+    position-area: block-end span-inline-end;
+    margin-top: 0.35rem;
+  }
+}
+
+.more__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.more__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: var(--r-sm);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.more__link:hover,
+.more__link[aria-current] {
+  background: var(--tint);
+  color: var(--link);
+}
+
+/* —— Mobile sheet —— */
+.mobile__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 40px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  z-index: 60;
+}
+
+.mobile__sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  display: grid;
+  align-content: center;
+  padding: 5rem var(--gutter) 2rem;
+  background: var(--bg);
+  clip-path: circle(0 at calc(100% - 2.5rem) 2rem);
+  transition: clip-path 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.mobile__sheet--open {
+  clip-path: circle(150% at calc(100% - 2.5rem) 2rem);
+  pointer-events: auto;
+  visibility: visible;
+}
+
+@starting-style {
+  .mobile__sheet--open {
+    clip-path: circle(0 at calc(100% - 2.5rem) 2rem);
+  }
+}
+
+.mobile__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.mobile__item {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+  transition-delay: calc(var(--i, 0) * 40ms + 80ms);
+}
+
+.mobile__sheet--open .mobile__item {
+  opacity: 1;
+  transform: none;
+}
+
+.mobile__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  color: var(--heading);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 8vw, 40px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  border-bottom: 1px solid var(--line);
+}
+
+.mobile__link[aria-current] {
+  color: var(--link);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile__sheet,
+  .mobile__item {
+    transition: none;
+  }
+
+  .mobile__sheet {
+    clip-path: none;
+    opacity: 0;
+  }
+
+  .mobile__sheet--open {
+    opacity: 1;
+  }
+
+  .mobile__item {
+    transform: none;
+    opacity: 1;
+  }
+}
+</style>
