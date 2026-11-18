@@ -59,3 +59,29 @@ export function toDateTimeAttr(value: string | Date | null | undefined): string 
   const day = String(d.getDate()).padStart(2, '0')
   return `${y}-${m}-${day}`
 }
+
+/** Dzień miesiąca do kafelka wydarzenia (np. „1”). */
+export function formatDay(value: string | Date | null | undefined): string {
+  const d = toDate(value)
+  if (!d) return ''
+  return String(d.getDate())
+}
+
+/** Skrót miesiąca PL do kafelka (np. „lis”). */
+export function formatMonthShort(value: string | Date | null | undefined): string {
+  const d = toDate(value)
+  if (!d) return ''
+  return plMonthsShort[d.getMonth()]
+}
+
+const timeFmt = new Intl.DateTimeFormat('pl-PL', {
+  hour: '2-digit',
+  minute: '2-digit',
+})
+
+/** Godzina PL, np. „17:00”. */
+export function formatTimePl(value: string | Date | null | undefined): string {
+  const d = toDate(value)
+  if (!d) return ''
+  return timeFmt.format(d)
+}

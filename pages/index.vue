@@ -1,233 +1,136 @@
 <script setup lang="ts">
+import type { HomeTopic } from '~/components/home/HomeTopics.vue'
+import type { HomeStat } from '~/components/home/HomeStats.vue'
+import type { WydarzeniaDoc } from '~/utils/calendarSource'
+import { upcomingWydarzenia } from '~/utils/calendarSource'
+import { KB_CATEGORIES } from '~/utils/kbMeta'
+
 useSeoMeta({
   title: 'WRS WEiTI',
   description:
-    'Wydziałowa Rada Samorządu Wydziału Elektroniki i Technik Informacyjnych PW.',
+    'Wydziałowa Rada Samorządu Wydziału Elektroniki i Technik Informacyjnych PW — baza wiedzy, aktualności i kontakt.',
 })
 
 const { data: ustawienia } = await useAsyncData('ustawienia-home', () =>
   queryContent('/ustawienia').findOne(),
 )
+
+const { data: news } = await usePublishedAktualnosci({
+  limit: 3,
+  key: 'home-news-3',
+})
+
+const { data: wydarzeniaDoc } = await useAsyncData('wydarzenia-home', () =>
+  queryContent<WydarzeniaDoc>('/wydarzenia').findOne(),
+)
+
+const { data: sklad } = await useAsyncData('sklad-home-stats', () =>
+  queryContent('/sklad').findOne(),
+)
+
+const { data: kbCount } = await useAsyncData('kb-count-home', async () => {
+  const docs = await queryContent('baza-wiedzy').only(['_path']).find()
+  return docs.length
+})
+
+const events = computed(() =>
+  upcomingWydarzenia(wydarzeniaDoc.value?.wydarzenia, new Date(), 3),
+)
+
+/** Home shows 4 „najczęstsze sprawy” tiles (05-strony); full list lives on /baza-wiedzy. */
+const topics = computed<HomeTopic[]>(() =>
+  KB_CATEGORIES.slice(0, 4).map((cat) => ({
+    id: cat.id,
+    title: cat.label,
+    description: cat.description,
+    to: '/baza-wiedzy',
+    icon: cat.icon,
+  })),
+)
+
+const stats = computed<HomeStat[]>(() => {
+  const fromCms = (ustawienia.value?.liczniki ?? []) as Array<{
+    etykieta?: string
+    wartosc?: number
+  }>
+
+  const osoby = (sklad.value?.osoby as unknown[] | undefined)?.length ?? 0
+  const grupy = (sklad.value?.grupy as Array<{ id?: string }> | undefined) ?? []
+  const komisje = grupy.filter(
+    (g) => g.id && g.id !== 'prezydium' && g.id !== 'czlonkowie',
+  ).length
+
+  const label = (i: number, fallback: string) =>
+    fromCms[i]?.etykieta?.trim() || fallback
+
+  const cmsVal = (i: number) => {
+    const v = fromCms[i]?.wartosc
+    return typeof v === 'number' && v > 0 ? v : null
+  }
+
+  return [
+    {
+      label: label(0, 'Członkowie samorządu'),
+      value: cmsVal(0) ?? osoby,
+      to: '/sklad',
+    },
+    {
+      label: label(1, 'Komisje'),
+      value: cmsVal(1) ?? komisje,
+    },
+    {
+      label: label(2, 'TODO(treść): uchwały w roku'),
+      value: cmsVal(2) ?? 0,
+    },
+    {
+      label: label(3, 'Artykuły w bazie'),
+      value: cmsVal(3) ?? kbCount.value ?? 0,
+    },
+  ]
+})
+
+const heroTitle = computed(
+  () => ustawienia.value?.hero?.tytul || 'Wiemy, jak to działa.',
+)
+
+const heroLead = computed(
+  () =>
+    ustawienia.value?.hero?.opis
+    || 'TODO(treść): jedno zdanie — student EiTI wie, gdzie załatwić sprawę.',
+)
 </script>
 
 <template>
-  <div>
-    <section class="hero section">
-      <div class="container hero__grid">
-        <div>
-          <UiEyebrow>
-            Wydziałowa Rada Samorządu · Wydział Elektroniki i Technik Informacyjnych PW
-          </UiEyebrow>
-          <h1>
-            Masz sprawę?
-            <em>{{ ustawienia?.hero?.tytul || 'Wiemy, jak to działa.' }}</em>
-          </h1>
-          <p class="lead">
-            {{
-              ustawienia?.hero?.opis
-                || 'TODO(treść): krótkie intro — jedno miejsce na sprawy studenckie EiTI.'
-            }}
-          </p>
-          <div class="hero__actions">
-            <UiButton href="#baza">Przejdź do bazy wiedzy</UiButton>
-            <UiButton variant="ghost" href="#kontakt">Zgłoś sprawę</UiButton>
-          </div>
-        </div>
-        <div class="hero__visual" aria-hidden="true">
-          <img
-            src="/brand/wrs-mark-color.svg"
-            alt=""
-            width="280"
-            height="280"
-            class="hero__mark"
-          >
-        </div>
-      </div>
-    </section>
-
-    <section id="baza" class="section section--surface">
-      <div class="container">
-        <UiEyebrow>Baza wiedzy</UiEyebrow>
-        <h2>Najczęstsze sprawy</h2>
-        <p class="muted">
-          TODO(treść): kafelki kategorii — pełna sekcja w A4.
-        </p>
-        <UiLink to="/baza-wiedzy">Wszystkie artykuły</UiLink>
-      </div>
-    </section>
-
-    <section id="aktualnosci" class="section section--compact">
-      <div class="container">
-        <div class="row-head">
-          <h2 class="h2-compact">Aktualności</h2>
-          <UiLink to="/aktualnosci">Wszystkie</UiLink>
-        </div>
-        <p class="muted">
-          TODO(treść): pasek 3 najnowszych wpisów (A4).
-        </p>
-      </div>
-    </section>
-
-    <section class="section section--compact">
-      <div class="container">
-        <UiEyebrow>Fundament</UiEyebrow>
-        <h2>Layout A2</h2>
-        <p class="muted">
-          Navbar (scroll-spy, Priority+, menu kołowe), stopka, Ctrl&nbsp;K, View Transitions.
-          Treści CMS (A3) + strony merytoryczne (A4).
-        </p>
-        <p class="hero__actions">
-          <UiLink to="/_ui">Galeria komponentów /_ui</UiLink>
-          <UiLink to="/_content">Smoke treści /_content</UiLink>
-        </p>
-      </div>
-    </section>
-
-    <section id="kalendarz" class="section section--surface">
-      <div class="container split">
-        <div>
-          <div class="row-head">
-            <h2>Nadchodzące</h2>
-          </div>
-          <p class="muted">
-            TODO(treść): 3 wydarzenia z <code>content/wydarzenia.yml</code> (A4).
-          </p>
-        </div>
-        <div id="kontakt" class="contact">
-          <h3>Nie wiesz, do kogo się zgłosić?</h3>
-          <p>
-            TODO(treść): krótki opis kontaktu WRS.
-          </p>
-          <div class="hero__actions">
-            <UiButton href="#kontakt">Zgłoś sprawę</UiButton>
-            <UiButton variant="ghost" href="#kontakt">
-              Napisz e-mail
-            </UiButton>
-          </div>
-          <p class="todo-note">TODO(treść): prawdziwy e-mail w ustawieniach.</p>
-        </div>
+  <div class="home">
+    <HomeHero
+      :title="heroTitle"
+      :lead="heroLead"
+    />
+    <HomeTopics :topics="topics" />
+    <HomeNewsStrip :items="news || []" />
+    <HomeStats :stats="stats" />
+    <section class="home-calendar section section--surface">
+      <div class="container home-calendar__grid">
+        <HomeEvents :events="events" />
+        <HomeContact
+          :email="ustawienia?.kontakt?.email"
+        />
       </div>
     </section>
   </div>
 </template>
 
 <style scoped>
-.hero__grid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 2rem;
-  align-items: center;
-}
-
-.lead {
-  max-width: 36rem;
-  color: var(--muted);
-  font-size: 1.05rem;
-}
-
-.hero__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.5rem;
-}
-
-.hero__visual {
-  display: grid;
-  place-items: center;
-  min-height: 280px;
-  border-radius: var(--r-lg);
-  background:
-    linear-gradient(135deg, var(--tint), transparent 55%),
-    var(--surface);
-  border: 1px solid var(--line);
-}
-
-.hero__mark {
-  width: min(280px, 70%);
-  height: auto;
-}
-
-.muted {
-  color: var(--muted);
-  max-width: 40rem;
-}
-
-.row-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.75rem;
-}
-
-.h2-compact {
-  font-size: 28px;
-  margin: 0;
-}
-
-.split {
+.home-calendar__grid {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 2rem;
-}
-
-.contact {
-  background: var(--grafit);
-  color: #fff;
-  border-radius: var(--r-lg);
-  padding: 1.75rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.contact h3 {
-  color: #fff;
-  font-size: clamp(24px, 3vw, 32px);
-  margin-top: 0;
-}
-
-.contact p {
-  color: color-mix(in srgb, #fff 78%, transparent);
-}
-
-.contact::before,
-.contact::after {
-  content: '';
-  position: absolute;
-  width: 40%;
-  height: 70%;
-  pointer-events: none;
-  transform: skewX(-18deg);
-}
-
-.contact::before {
-  right: -8%;
-  top: -20%;
-  background: color-mix(in srgb, var(--szafir) 35%, transparent);
-}
-
-.contact::after {
-  right: 8%;
-  bottom: -30%;
-  background: color-mix(in srgb, var(--cyjan) 28%, transparent);
-}
-
-.todo-note {
-  margin: 1rem 0 0;
-  font-size: 12px;
-  color: color-mix(in srgb, #fff 55%, transparent);
+  align-items: start;
 }
 
 @media (max-width: 900px) {
-  .hero__grid,
-  .split {
+  .home-calendar__grid {
     grid-template-columns: 1fr;
-  }
-
-  .hero__visual {
-    min-height: 200px;
-    order: -1;
   }
 }
 </style>
