@@ -1,3 +1,9 @@
+# Publishes SSG (+ Pagefind) to GitHub Pages project site:
+#   https://jaku2019.github.io/wrs-eiti-strona/
+#
+# ONE-TIME (repo owner): Settings → Pages → Build and deployment → Source =
+#   GitHub Actions. Without that, `deploy` fails with
+#   "Ensure GitHub Pages has been enabled" (build still succeeds).
 name: Deploy GitHub Pages
 
 on:
@@ -37,10 +43,14 @@ jobs:
         env:
           SITE_URL: ${{ steps.site.outputs.url }}
           NUXT_APP_BASE_URL: ${{ steps.site.outputs.base }}
-        # `npm run generate` runs `nuxt generate` then `pagefind` (see package.json)
+        # generate = nuxt generate → fix:asset-base → pagefind
         run: npm run generate
       - name: Verify Pagefind index
         run: npm run verify:search
+      - name: Verify asset baseURL
+        env:
+          NUXT_APP_BASE_URL: ${{ steps.site.outputs.base }}
+        run: npm run verify:asset-base
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .output/public

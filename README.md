@@ -9,11 +9,24 @@ Tymczasowy adres (GitHub Pages): **https://jaku2019.github.io/wrs-eiti-strona/**
 ```bash
 npm ci
 npm run dev
-npm run generate      # nuxt generate + Pagefind → .output/public (+ pagefind/)
-npm run verify:search # smoke indeksu (po generate)
+npm run generate         # nuxt generate + fix baseURL assets + Pagefind
+npm run verify:search    # smoke indeksu (po generate)
+npm run verify:asset-base # brak `/_fonts` / favicon bez base path
 ```
 
 Wymagania: Node ≥ 20.
+
+### Podgląd jak na GitHub Pages (ważne: `baseURL`)
+
+Site jest **project Pages** pod `/wrs-eiti-strona/` (nie root). Serwuj katalog nadrzędny z podfolderem o tej nazwie — inaczej JS/CSS 404 i brak hydracji:
+
+```bash
+npm run generate
+rm -rf /tmp/wrs-pages-serve && mkdir -p /tmp/wrs-pages-serve/wrs-eiti-strona
+cp -a .output/public/. /tmp/wrs-pages-serve/wrs-eiti-strona/
+npx serve -l 4173 /tmp/wrs-pages-serve
+# otwórz http://127.0.0.1:4173/wrs-eiti-strona/
+```
 
 ## Stack
 
@@ -44,6 +57,23 @@ Smoke: `npm run verify:search` (CI uruchamia to w workflow Pages).
 - Smoke zapytań: `/_content` (prerender)
 - Kalendarz: `content/wydarzenia.yml` + `TODO(ICS)` w pliku i `utils/calendarSource.ts`
 - Facebook: nadal stub / DRY_RUN (sekcja poniżej) — `facebook.publish` domyślnie wyłączone w CMS
+
+## GitHub Pages (włączenie + deploy)
+
+Docelowy URL: **https://jaku2019.github.io/wrs-eiti-strona/**
+
+Workflow `.github/workflows/deploy-pages.yml` buduje `.output/public` (z Pagefind) i publikuje przez `actions/deploy-pages`.  
+**Build może być zielony, a `deploy` czerwony**, dopóki Pages nie jest włączone.
+
+### Jednorazowo — właściciel repo (Jakub)
+
+1. Otwórz **https://github.com/jaku2019/wrs-eiti-strona/settings/pages**
+2. **Build and deployment → Source** → wybierz **GitHub Actions** (nie „Deploy from a branch”).
+3. Zapisz. Pierwsze udane `Deploy GitHub Pages` utworzy environment `github-pages`.
+4. (Opcjonalnie) Actions → **Deploy GitHub Pages** → **Run workflow**, albo push na `main`.
+5. Po sukcesie sprawdź: `https://jaku2019.github.io/wrs-eiti-strona/` oraz `/sklad`, `/faq`, Ctrl+K.
+
+Host mode: **project site** z `NUXT_APP_BASE_URL=/wrs-eiti-strona/` (domyślne w `nuxt.config.ts` i CI).
 
 ## Domena (swap github.io → wydziałowa)
 
@@ -104,10 +134,7 @@ Zdjęcia składu: placeholdery z inicjałów (`UiAvatarPlaceholder`) do czasu zg
 
 ## Kolejne kamienie
 
-- **A4a** home + 404  
-- **A4b** skład `/sklad` + FAQ `/faq` (kotwice, placeholdery inicjałów)  
-- **A5** Pagefind → podpięcie do Ctrl&nbsp;K  
-- **A6** FB produkcyjnie
+- **A6** FB produkcyjnie (poza zakresem, dopóki Meta + sekrety)
 
 ## Licencja / treść
 
