@@ -6,14 +6,10 @@ const { openPalette } = useSearch()
 
 const isHome = computed(() => route.path === '/' || route.path === '')
 
-const router = useRouter()
-
 const sectionItems = computed<PriorityNavItem[]>(() => {
-  const hashHref = (id: string) => {
-    // Respect NUXT_APP_BASE_URL on GitHub Pages.
-    if (isHome.value) return `#${id}`
-    return router.resolve({ path: '/', hash: `#${id}` }).href
-  }
+  // On home: plain `#id` anchors (native smooth scroll, re-clickable).
+  // Elsewhere: `/#id` router links (base-aware, no full reload, view transition).
+  const hashHref = (id: string) => (isHome.value ? `#${id}` : `/#${id}`)
   return [
     { id: 'baza', label: 'Baza wiedzy', href: hashHref('baza'), kind: 'section' },
     { id: 'aktualnosci', label: 'Aktualności', href: hashHref('aktualnosci'), kind: 'section' },
@@ -233,17 +229,8 @@ const mobileMenuItems = computed(() => navItems.value)
             data-nav-sep
             aria-hidden="true"
           />
-          <NuxtLink
-            v-if="item.kind === 'page'"
-            :to="item.href"
-            class="navbar__link navbar__link--page"
-            :data-nav-item="item.id"
-            :aria-current="itemIsActive(item) ? 'page' : undefined"
-          >
-            <span data-nav-label>{{ item.label }}</span>
-          </NuxtLink>
           <a
-            v-else
+            v-if="item.href.startsWith('#')"
             :href="item.href"
             class="navbar__link"
             :data-nav-item="item.id"
@@ -251,6 +238,15 @@ const mobileMenuItems = computed(() => navItems.value)
           >
             <span data-nav-label>{{ item.label }}</span>
           </a>
+          <NuxtLink
+            v-else
+            :to="item.href"
+            class="navbar__link"
+            :data-nav-item="item.id"
+            :aria-current="itemIsActive(item) ? (item.kind === 'page' ? 'page' : 'true') : undefined"
+          >
+            <span data-nav-label>{{ item.label }}</span>
+          </NuxtLink>
         </template>
 
         <LayoutMoreMenu
