@@ -128,7 +128,6 @@ defineExpose({ moreBtn, sheet })
             @click="onItemClick"
           >
             <span>{{ item.label }}</span>
-            <UiIcon name="externalLink" :size="14" />
           </NuxtLink>
           <a
             v-else
@@ -159,6 +158,7 @@ defineExpose({ moreBtn, sheet })
       <UiIcon :name="isOpen ? 'x' : 'menu'" :size="18" />
     </button>
 
+    <Teleport to="body">
     <div
       id="nav-mobile-sheet"
       ref="sheet"
@@ -185,7 +185,6 @@ defineExpose({ moreBtn, sheet })
               @click="onItemClick"
             >
               {{ item.label }}
-              <UiIcon name="arrowRight" :size="22" />
             </NuxtLink>
             <a
               v-else
@@ -200,6 +199,7 @@ defineExpose({ moreBtn, sheet })
         </ul>
       </nav>
     </div>
+    </Teleport>
   </div>
 </template>
 
@@ -308,29 +308,34 @@ defineExpose({ moreBtn, sheet })
   z-index: 60;
 }
 
+/* Teleported to <body>: the header's backdrop-filter would otherwise make it
+   the containing block and clip the sheet to the 68px bar. Sits under the
+   sticky header (z 50) so the „Zamknij” toggle stays visible. */
 .mobile__sheet {
   position: fixed;
-  inset: 0;
-  z-index: 55;
+  inset: 68px 0 0;
+  z-index: 45;
   display: grid;
-  align-content: center;
-  padding: 5rem var(--gutter) 2rem;
+  align-content: safe center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem var(--gutter) 2rem;
   background: var(--bg);
-  clip-path: circle(0 at calc(100% - 2.5rem) 2rem);
+  clip-path: circle(0 at calc(100% - 2.5rem) 0);
   transition: clip-path 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
   visibility: hidden;
 }
 
 .mobile__sheet--open {
-  clip-path: circle(150% at calc(100% - 2.5rem) 2rem);
+  clip-path: circle(150% at calc(100% - 2.5rem) 0);
   pointer-events: auto;
   visibility: visible;
 }
 
 @starting-style {
   .mobile__sheet--open {
-    clip-path: circle(0 at calc(100% - 2.5rem) 2rem);
+    clip-path: circle(0 at calc(100% - 2.5rem) 0);
   }
 }
 
