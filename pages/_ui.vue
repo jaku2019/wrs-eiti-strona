@@ -13,7 +13,7 @@ const chip = ref('prezydium')
       <UiEyebrow>Dev only</UiEyebrow>
       <h1>Komponenty UI</h1>
       <p class="muted">
-        Galeria wariantów z M1.4. Pełny layout (navbar Priority+, footer) — A2.
+        Galeria wariantów UI. Layout A2: navbar, Priority+, Ctrl&nbsp;K, stopka.
       </p>
 
       <section class="ui-block">

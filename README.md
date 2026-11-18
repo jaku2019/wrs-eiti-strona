@@ -14,10 +14,11 @@ npm run generate   # → .output/public
 
 Wymagania: Node ≥ 20.
 
-## Stack (A1)
+## Stack
 
 - Nuxt 3 + TypeScript + `@nuxt/content` + `@nuxt/fonts` + `@nuxtjs/sitemap`
 - Tokeny / motyw: `assets/css/{tokens,base,motion}.css`, `useTheme` (anty-mignięcie w `<head>`)
+- Layout A2: `LayoutNavbar` (scroll-spy, Priority+, menu kołowe), `LayoutFooter`, Ctrl&nbsp;K (`LayoutSearchPalette`, dane statyczne do A5), View Transitions
 - Komponenty `components/ui/` + galeria `/_ui`
 - Deploy: `.github/workflows/deploy-pages.yml` (bez Facebooka)
 - Treści przykładowe / `TODO(treść)` w `content/`
@@ -74,11 +75,10 @@ Zdjęcia składu: placeholdery z inicjałów (`UiAvatarPlaceholder`) do czasu zg
 
 ## Kolejne kamienie
 
-- **A2** layout / navbar / footer  
 - **A3** pełne Pages CMS + filtry draft/dat  
-- **A4** strony merytoryczne  
-- **A5** Pagefind  
-- **A6** FB produkcyjnie  
+- **A4** strony merytoryczne (home / skład / KB / …)  
+- **A5** Pagefind → podpięcie do Ctrl&nbsp;K  
+- **A6** FB produkcyjnie 
 
 ## Licencja / treść
 
