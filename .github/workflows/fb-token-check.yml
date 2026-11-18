@@ -1,0 +1,23 @@
+# Kontrola ważności tokenu FB — tylko ręcznie (A1).
+# Wymaga Secrets: FB_PAGE_ID, FB_PAGE_TOKEN. Bez nich kończy się sukcesem z komunikatem.
+
+name: FB token check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe Graph API
+        env:
+          TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          PAGE: ${{ secrets.FB_PAGE_ID }}
+        run: |
+          if [ -z "$TOKEN" ] || [ -z "$PAGE" ]; then
+            echo "Brak FB_PAGE_TOKEN / FB_PAGE_ID — pomijam (stub A1)."
+            exit 0
+          fi
+          curl -fsS -H "Authorization: Bearer $TOKEN" \
+            "https://graph.facebook.com/v23.0/$PAGE?fields=name"

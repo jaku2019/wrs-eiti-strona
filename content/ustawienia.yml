@@ -1,0 +1,16 @@
+# Ustawienia globalne strony (kontakt, social, hero, liczniki).
+# TODO(treść): uzupełnić prawdziwe dane WRS.
+
+kontakt:
+  email: "TODO(treść): email kontaktowy WRS"
+
+social:
+  facebook: "https://www.facebook.com/"
+  # TODO(treść): oficjalny URL strony FB WRS
+
+hero:
+  tytul: "Wiemy, jak to działa."
+  opis: "TODO(treść): jedno zdanie — student EiTI wie, gdzie załatwić sprawę."
+
+liczniki:
+  - { etykieta: "TODO(treść): etykieta", wartosc: 0 }

@@ -1,0 +1,8 @@
+# Po podpięciu domeny wydziałowej:
+# 1. Skopiuj ten plik do public/CNAME (bez .example) z jedną linią domeny, np.:
+#    wrs.elka.pw.edu.pl
+# 2. Ustaw w GitHub → Settings → Pages → Custom domain.
+# 3. Ustaw Variables: SITE_URL=https://wrs.elka.pw.edu.pl oraz NUXT_APP_BASE_URL=/
+# 4. Usuń / zaktualizuj ten plik-przykład według potrzeby.
+#
+# Ten plik NIE jest CNAME — tylko instrukcja (unikamy przypadkowego CNAME na github.io).

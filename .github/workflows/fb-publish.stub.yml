@@ -1,0 +1,38 @@
+# STUB — publikacja FB wyłączona z automatycznego deployu (A1 / A0).
+# Gdy Meta + sekrety będą gotowe (A6):
+#   1. Ustaw Secrets: FB_PAGE_ID, FB_PAGE_TOKEN
+#   2. Ustaw Variable: SITE_URL
+#   3. Zmień `if: false` poniżej / przenieś job do publikacja.yml
+#   4. Odznacz draft i facebook.publish na aktualnościach ≥ CUTOFF
+#
+# Ten workflow jest ręczny i domyślnie no-op, żeby nic nie poszło na FB przypadkiem.
+
+name: FB publish (stub)
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'DRY_RUN (1 = tylko log)'
+        required: true
+        default: '1'
+
+jobs:
+  publish:
+    if: false # A1: wyłączone na stałe do czasu A6
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Dry-run / publish stub
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_PAGE_TOKEN: ${{ secrets.FB_PAGE_TOKEN }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          CUTOFF: '2026-12-01'
+        run: node scripts/publish-facebook.mjs

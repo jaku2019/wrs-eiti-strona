@@ -1,0 +1,16 @@
+# Skład samorządu — przykładowe / TODO. Zdjęcia = placeholdery z inicjałów (RODO).
+kadencja: 2025/2026
+aktualizacja: 2026-11-18
+grupy:
+  - { id: prezydium, label: Prezydium }
+  - { id: dydaktyka, label: Dydaktyczna }
+  - { id: socjalna, label: Socjalno-Bytowa }
+  - { id: kultura, label: Kultury i Sportu }
+  - { id: promocja, label: Promocji }
+  - { id: finanse, label: Finansowa }
+  - { id: czlonkowie, label: Członkowie }
+osoby:
+  - { imie: "TODO Imię Nazwisko", funkcja: "Przewodnicząca WRS", grupa: prezydium, kluczowa: true }
+  - { imie: "TODO Imię Nazwisko", funkcja: Członek, grupa: czlonkowie }
+przedstawiciele:
+  - { organ: "Rada Wydziału EiTI", opis: "TODO(treść): opis mandatu", osoby: [] }

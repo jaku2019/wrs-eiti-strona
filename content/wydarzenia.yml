@@ -1,0 +1,17 @@
+# Kalendarz wydarzeń — źródło prawdy w CMS (A0).
+# TODO: później adapter Google Calendar → ICS przy buildzie (nie usuwać tego pliku
+# jako źródła; adapter ma dokładać / synchronizować wpisy, nie zastępować modelu).
+
+wydarzenia:
+  - id: przyklad-zebranie
+    tytul: "TODO(treść): przykładowe zebranie WRS"
+    start: 2026-12-01T17:00:00+01:00
+    koniec: 2026-12-01T19:00:00+01:00
+    miejsce: "TODO(treść): sala"
+    tag: zebranie
+  - id: przyklad-dyzur
+    tytul: "TODO(treść): dyżur prezydium"
+    start: 2026-12-03T12:00:00+01:00
+    koniec: 2026-12-03T14:00:00+01:00
+    miejsce: "TODO(treść): pokój samorządu"
+    tag: dyzur

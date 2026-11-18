@@ -1,0 +1,16 @@
+sekcje:
+  - id: organy
+    tytul: Organy i funkcje
+    pytania:
+      - id: wrs
+        q: Czym zajmuje się Wydziałowa Rada Samorządu?
+        a: "TODO(treść): krótka odpowiedź o kompetencjach WRS."
+      - id: rada-wydzialu
+        q: Czym różni się WRS od Rady Wydziału?
+        a: "TODO(treść): różnice kompetencji."
+      - id: parlament
+        q: Co robi Parlament Samorządu Studentów PW?
+        a: "TODO(treść): rola PSS PW."
+      - id: funkcje
+        q: Za co odpowiada przewodniczący, a za co komisje?
+        a: "TODO(treść): podział ról."

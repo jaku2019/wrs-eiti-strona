@@ -1,0 +1,24 @@
+# Minimalny szkic Pages CMS — pełna konfiguracja w A3 (04-tresci-i-cms.md).
+# Redaktorzy: lista kont GitHub — później (A0).
+
+media:
+  input: public/uploads
+  output: /uploads
+
+content:
+  - name: aktualnosci
+    label: Aktualności
+    type: collection
+    path: content/aktualnosci
+    filename: "{year}-{month}-{day}-{primary}.md"
+    view:
+      fields: [title, date, draft]
+      default: { sort: date, order: desc }
+    fields:
+      - { name: title, label: Tytuł, type: string, required: true }
+      - { name: date, label: Data publikacji, type: date, options: { time: true } }
+      - { name: excerpt, label: Lead, type: string }
+      - { name: draft, label: Szkic, type: boolean, default: false }
+      - name: body
+        label: Treść
+        type: markdown
