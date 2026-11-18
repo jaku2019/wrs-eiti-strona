@@ -5,14 +5,16 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "generate": "nuxt generate && npm run pagefind",
+    "generate": "nuxt generate && npm run fix:asset-base && npm run pagefind",
+    "fix:asset-base": "node scripts/fix-asset-base.mjs",
     "pagefind": "pagefind --site .output/public",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "fb:dry-run": "DRY_RUN=1 node scripts/publish-facebook.mjs",
     "fb:list-due": "node scripts/publish-facebook.mjs --list-due",
     "verify:content-filters": "node scripts/verify-content-filters.mjs",
-    "verify:search": "node scripts/verify-pagefind.mjs"
+    "verify:search": "node scripts/verify-pagefind.mjs",
+    "verify:asset-base": "node scripts/verify-asset-base.mjs"
   },
   "dependencies": {
     "@nuxt/content": "^2.13.4",

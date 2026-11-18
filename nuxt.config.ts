@@ -9,6 +9,13 @@ const siteOrigin = (() => {
     return 'https://jaku2019.github.io'
   }
 })()
+// Keep trailing slash; head icon hrefs must include project Pages path.
+const appBaseURL = process.env.NUXT_APP_BASE_URL || '/wrs-eiti-strona/'
+const withBase = (assetPath: string) => {
+  const base = appBaseURL.endsWith('/') ? appBaseURL.slice(0, -1) : appBaseURL
+  const path = assetPath.startsWith('/') ? assetPath : `/${assetPath}`
+  return base ? `${base}${path}` : path
+}
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -39,7 +46,7 @@ export default defineNuxtConfig({
   app: {
     // Project Pages: https://jaku2019.github.io/wrs-eiti-strona/
     // For a custom domain (or user site), set NUXT_APP_BASE_URL=/ and SITE_URL accordingly.
-    baseURL: process.env.NUXT_APP_BASE_URL || '/wrs-eiti-strona/',
+    baseURL: appBaseURL,
     head: {
       htmlAttrs: { lang: 'pl' },
       title: 'WRS WEiTI',
@@ -54,9 +61,9 @@ export default defineNuxtConfig({
         { name: 'theme-color', content: '#F0F0F0' },
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32.png' },
-        { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
+        { rel: 'icon', type: 'image/x-icon', href: withBase('/favicon.ico') },
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: withBase('/favicon-32.png') },
+        { rel: 'apple-touch-icon', href: withBase('/apple-touch-icon.png') },
       ],
       script: [
         {
