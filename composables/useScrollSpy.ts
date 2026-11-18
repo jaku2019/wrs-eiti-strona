@@ -56,7 +56,14 @@ export function useScrollSpy(
             }
           }
 
-          if (!visible.size) return
+          if (!visible.size) {
+            // Above the first section (hero): nothing active — as in the mockup.
+            const first = elements[0]
+            if (first && first.getBoundingClientRect().top > window.innerHeight * 0.35) {
+              activeId.value = null
+            }
+            return
+          }
 
           // Prefer the topmost matching section among currently intersecting.
           let best: string | null = null
@@ -81,12 +88,12 @@ export function useScrollSpy(
 
       for (const el of elements) observer.observe(el)
 
-      // Initial: first section near viewport top, else first id.
+      // Initial: first section near viewport top, else none.
       const firstVisible = elements.find((el) => {
         const rect = el.getBoundingClientRect()
         return rect.top < window.innerHeight * 0.55 && rect.bottom > window.innerHeight * 0.2
       })
-      activeId.value = firstVisible?.id ?? ids[0] ?? null
+      activeId.value = firstVisible?.id ?? null
     }
 
     setup()

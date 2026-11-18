@@ -83,12 +83,25 @@ export function usePriorityNav(allItems: MaybeRefOrGetter<PriorityNavItem[]>) {
         ? Math.ceil(moreEl.getBoundingClientRect().width) || 88
         : 88
 
+      // Separator between sections and pages (incl. margins) — present only
+      // when both kinds stay visible.
+      const sepEl = navEl.querySelector<HTMLElement>('[data-nav-sep]')
+      const sepWidth = sepEl
+        ? sepEl.getBoundingClientRect().width
+          + parseFloat(getComputedStyle(sepEl).marginLeft || '0')
+          + parseFloat(getComputedStyle(sepEl).marginRight || '0')
+          + gap
+        : 0
+      const kindOf = new Map(items.map((i) => [i.id, i.kind]))
+
       const sumVisible = (ids: string[]) => {
         let total = 0
         ids.forEach((id, index) => {
           total += widths.get(id) ?? 0
           if (index > 0) total += gap
         })
+        const kinds = new Set(ids.map((id) => kindOf.get(id)))
+        if (kinds.has('section') && kinds.has('page')) total += sepWidth
         return total
       }
 
