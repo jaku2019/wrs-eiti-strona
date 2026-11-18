@@ -103,7 +103,7 @@ function updateIndicator() {
 
   const navRect = navEl.value.getBoundingClientRect()
   const elRect = el.getBoundingClientRect()
-  // Underline width = text width (not full hit area for page links with icon).
+  // Underline width = text width (not the full padded hit area).
   const textEl = el.querySelector('[data-nav-label]') ?? el
   const textRect = textEl.getBoundingClientRect()
   const left = textRect.left - navRect.left
@@ -241,7 +241,6 @@ const mobileMenuItems = computed(() => navItems.value)
             :aria-current="itemIsActive(item) ? 'page' : undefined"
           >
             <span data-nav-label>{{ item.label }}</span>
-            <UiIcon name="arrowUpRight" :size="14" />
           </NuxtLink>
           <a
             v-else
@@ -382,18 +381,6 @@ const mobileMenuItems = computed(() => navItems.value)
 
 .navbar__link[aria-current] {
   color: var(--heading);
-}
-
-.navbar__link--page :deep(.ui-icon) {
-  opacity: 0.55;
-  transition:
-    opacity 0.2s,
-    transform 0.3s var(--ease);
-}
-
-.navbar__link--page:hover :deep(.ui-icon) {
-  opacity: 1;
-  transform: translate(1px, -1px);
 }
 
 .navbar__sep {
