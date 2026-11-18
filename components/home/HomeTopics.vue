@@ -17,27 +17,29 @@ defineProps<{
 <template>
   <section
     id="baza"
-    class="home-topics section section--surface"
+    class="home-topics"
   >
     <div class="container">
-      <UiEyebrow>Baza wiedzy</UiEyebrow>
-      <div class="home-topics__head">
-        <h2>Najczęstsze sprawy</h2>
+      <div class="sec-head reveal">
+        <div>
+          <UiEyebrow>Baza wiedzy</UiEyebrow>
+          <h2>Najczęstsze sprawy</h2>
+        </div>
         <UiLink to="/baza-wiedzy">
           Wszystkie artykuły
         </UiLink>
       </div>
-      <ul class="home-topics__grid">
+      <ul class="home-topics__grid reveal">
         <li
           v-for="topic in topics"
           :key="topic.id"
         >
           <NuxtLink
             :to="topic.to"
-            class="topic-tile"
+            class="tile"
           >
             <span
-              class="topic-tile__icon"
+              class="tile__ico"
               aria-hidden="true"
             >
               <UiIcon
@@ -45,8 +47,10 @@ defineProps<{
                 :size="22"
               />
             </span>
-            <span class="topic-tile__title">{{ topic.title }}</span>
-            <span class="topic-tile__desc">{{ topic.description }}</span>
+            <span class="tile__text">
+              <span class="tile__title">{{ topic.title }}</span>
+              <span class="tile__desc">{{ topic.description }}</span>
+            </span>
           </NuxtLink>
         </li>
       </ul>
@@ -55,17 +59,27 @@ defineProps<{
 </template>
 
 <style scoped>
-.home-topics__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem 1.25rem;
-  margin-bottom: 1.75rem;
+/* mockup: #baza (padding-top 32px pod cięciem hero), .sec-head, .grid4, .tile */
+.home-topics {
+  background: var(--surface);
+  padding: 32px 0 96px;
 }
 
-.home-topics__head h2 {
+.sec-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.sec-head :deep(.ui-eyebrow) {
   margin: 0;
+}
+
+.sec-head h2 {
+  margin-top: 12px;
 }
 
 .home-topics__grid {
@@ -73,34 +87,30 @@ defineProps<{
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
 }
 
-.topic-tile {
+.tile {
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  justify-content: space-between;
+  gap: 28px;
   height: 100%;
-  padding: 1.15rem 1.1rem 1.25rem;
+  min-height: 210px;
+  padding: 24px;
+  background: var(--bg);
   border: 1px solid var(--line);
   border-radius: var(--r);
-  background: var(--bg);
+  color: var(--text);
   text-decoration: none;
-  color: inherit;
   transition:
-    border-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    border-color 0.25s,
+    box-shadow 0.25s,
+    transform 0.25s var(--ease);
 }
 
-.topic-tile:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px color-mix(in srgb, var(--grafit) 8%, transparent);
-}
-
-.topic-tile__icon {
+.tile__ico {
   display: grid;
   place-items: center;
   width: 44px;
@@ -109,48 +119,46 @@ defineProps<{
   background: var(--tint);
   color: var(--link);
   transition:
-    background 0.2s ease,
-    color 0.2s ease;
+    background 0.25s,
+    color 0.25s;
 }
 
-.topic-tile:hover .topic-tile__icon {
+.tile:hover {
+  border-color: color-mix(in oklab, var(--szafir) 55%, transparent);
+  box-shadow: 0 12px 30px -18px #3c3c4c66;
+  transform: translateY(-2px);
+}
+
+.tile:hover .tile__ico {
   background: var(--szafir-deep);
   color: #fff;
 }
 
-.topic-tile__title {
-  font-family: var(--font-sans);
-  font-size: 19px;
-  font-weight: 600;
-  line-height: 1.25;
+.tile__text {
+  display: block;
+}
+
+.tile__title {
+  display: block;
+  font: 600 19px / 1.25 var(--font-sans);
+  letter-spacing: -0.01em;
   color: var(--heading);
 }
 
-.topic-tile__desc {
+.tile__desc {
+  display: block;
+  margin-top: 6px;
   font-size: 14px;
-  line-height: 1.45;
   color: var(--muted);
 }
 
-@media (max-width: 1000px) {
-  .home-topics__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 560px) {
-  .home-topics__grid {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .topic-tile,
-  .topic-tile__icon {
+  .tile,
+  .tile__ico {
     transition: none;
   }
 
-  .topic-tile:hover {
+  .tile:hover {
     transform: none;
   }
 }

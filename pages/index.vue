@@ -109,7 +109,7 @@ const heroLead = computed(
     <HomeTopics :topics="topics" />
     <HomeNewsStrip :items="news || []" />
     <HomeStats :stats="stats" />
-    <section class="home-calendar section section--surface">
+    <section class="home-calendar">
       <div class="container home-calendar__grid">
         <HomeEvents :events="events" />
         <HomeContact
@@ -121,16 +121,23 @@ const heroLead = computed(
 </template>
 
 <style scoped>
+/* mockup: .band > section > .wrap.two */
+.home-calendar {
+  background: var(--surface);
+  padding-block: 96px;
+}
+
 .home-calendar__grid {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
-  gap: 2rem;
+  gap: 56px;
   align-items: start;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 860px) {
   .home-calendar__grid {
     grid-template-columns: 1fr;
+    gap: 48px;
   }
 }
 </style>

@@ -22,8 +22,11 @@ const emailLabel = computed(() => {
 <template>
   <aside
     id="kontakt"
-    class="home-contact"
+    class="home-contact reveal"
   >
+    <UiEyebrow class="home-contact__eyebrow">
+      Kontakt
+    </UiEyebrow>
     <h3>Nie wiesz, do kogo się zgłosić?</h3>
     <p>
       {{
@@ -68,47 +71,45 @@ const emailLabel = computed(() => {
 </template>
 
 <style scoped>
+/* mockup: .contact */
 .home-contact {
-  --text: #fff;
-  --heading: #fff;
-  --line: color-mix(in srgb, #fff 28%, transparent);
-  --tint: color-mix(in srgb, var(--szafir) 28%, transparent);
-  --accent: #c5d4f0;
-  --link: #c5d4f0;
   --btn-bg: #fff;
   --btn-fg: var(--grafit-deep);
-  --btn-hover: #e8eef8;
-
+  --btn-hover: #dce5f6;
   position: relative;
   overflow: hidden;
-  background: var(--grafit);
-  color: #fff;
+  display: grid;
+  gap: 18px;
+  align-content: start;
+  padding: 40px;
   border-radius: var(--r-lg);
-  padding: 1.75rem 1.6rem 1.5rem;
-  isolation: isolate;
+  background: var(--grafit);
+  color: #e7e6ee;
 }
 
 .home-contact::before,
 .home-contact::after {
   content: '';
   position: absolute;
-  width: 42%;
-  height: 75%;
+  top: -60px;
+  transform: rotate(30deg);
   pointer-events: none;
-  z-index: 0;
-  transform: skewX(-18deg);
 }
 
 .home-contact::before {
-  right: -10%;
-  top: -22%;
-  background: color-mix(in srgb, var(--szafir) 38%, transparent);
+  right: -20px;
+  width: 70px;
+  height: 360px;
+  background: linear-gradient(var(--szafir), transparent 85%);
+  opacity: 0.5;
 }
 
 .home-contact::after {
-  right: 6%;
-  bottom: -34%;
-  background: color-mix(in srgb, var(--cyjan) 28%, transparent);
+  right: 70px;
+  width: 18px;
+  height: 300px;
+  background: linear-gradient(var(--cyjan), transparent 85%);
+  opacity: 0.6;
 }
 
 .home-contact > * {
@@ -116,28 +117,50 @@ const emailLabel = computed(() => {
   z-index: 1;
 }
 
+.home-contact__eyebrow {
+  margin: 0;
+  color: #a9a8b8;
+}
+
 .home-contact h3 {
-  margin: 0 0 0.55rem;
-  font-size: clamp(24px, 3vw, 32px);
+  margin: 0;
+  font: 500 36px / 1.08 var(--font-display);
+  letter-spacing: -0.02em;
   color: #fff;
 }
 
 .home-contact p {
-  margin: 0 0 1.25rem;
-  color: color-mix(in srgb, #fff 78%, transparent);
+  margin: 0;
+  max-width: 40ch;
+  color: #c3c2d0;
   font-size: 15px;
-  line-height: 1.5;
 }
 
 .home-contact__actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 12px;
+  align-items: center;
+  margin-top: 8px;
 }
 
-.home-contact__note {
-  margin: 1rem 0 0 !important;
-  font-size: 12px !important;
-  color: color-mix(in srgb, #fff 55%, transparent) !important;
+.home-contact__actions :deep(.ui-btn--ghost) {
+  color: #fff;
+  border-color: #ffffff38;
+}
+
+.home-contact__actions :deep(.ui-btn--ghost:hover) {
+  background: #ffffff14;
+}
+
+.home-contact .home-contact__note {
+  font-size: 12px;
+  color: #a9a8b8;
+}
+
+@media (max-width: 480px) {
+  .home-contact {
+    padding: 28px 24px;
+  }
 }
 </style>

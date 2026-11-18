@@ -9,10 +9,10 @@ defineProps<{
 <template>
   <section
     id="aktualnosci"
-    class="home-news section section--compact"
+    class="home-news"
   >
     <div class="container">
-      <div class="home-news__head">
+      <div class="home-news__head reveal">
         <h2 class="home-news__title">
           Aktualności
         </h2>
@@ -23,7 +23,7 @@ defineProps<{
 
       <div
         v-if="items.length"
-        class="home-news__strip"
+        class="home-news__strip reveal"
       >
         <NewsCard
           v-for="item in items"
@@ -46,27 +46,29 @@ defineProps<{
 </template>
 
 <style scoped>
+/* mockup: #aktualnosci, .news-head, .news */
 .home-news {
   background: var(--bg);
+  padding-block: 56px;
 }
 
 .home-news__head {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.15rem;
+  align-items: center;
+  gap: 16px 28px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
 .home-news__title {
-  margin: 0;
+  margin: 0 auto 0 0;
   font-size: 28px;
 }
 
 .home-news__strip {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
 }
 
 .home-news__empty {
@@ -77,15 +79,12 @@ defineProps<{
 
 @media (max-width: 900px) {
   .home-news__strip {
-    display: flex;
-    gap: 1rem;
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    grid-auto-columns: min(320px, 82%);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    padding-bottom: 0.25rem;
-    margin-inline: calc(-1 * var(--gutter));
-    padding-inline: var(--gutter);
     scrollbar-width: none;
-    -ms-overflow-style: none;
   }
 
   .home-news__strip::-webkit-scrollbar {
@@ -93,7 +92,6 @@ defineProps<{
   }
 
   .home-news__strip :deep(.news-card) {
-    flex: 0 0 min(78vw, 320px);
     scroll-snap-align: start;
   }
 }

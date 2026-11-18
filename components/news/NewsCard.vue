@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { formatDateShort, toDateTimeAttr } from '~/utils/formatDate'
+import { formatDateLong, formatDateShort, toDateTimeAttr } from '~/utils/formatDate'
 import { withAppBase } from '~/utils/siteUrl'
 
 const props = withDefaults(
@@ -45,7 +45,7 @@ const imageSrc = computed(() =>
         class="news-card__date"
         :datetime="toDateTimeAttr(date)"
       >
-        {{ formatDateShort(date) }}
+        {{ variant === 'compact' ? formatDateLong(date) : formatDateShort(date) }}
       </time>
       <h3 class="news-card__title">{{ title }}</h3>
       <p v-if="variant === 'full' && excerpt" class="news-card__excerpt">
@@ -167,6 +167,207 @@ const imageSrc = computed(() =>
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+
+/* ---------- wariant kompaktowy — mockup: .card ---------- */
+.news-card--compact {
+  grid-template-columns: 84px 1fr;
+  gap: 14px;
+  align-items: center;
+  min-width: 0;
+  padding: 10px;
+  overflow: visible;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.news-card--compact:hover {
+  transform: none;
+  border-color: color-mix(in oklab, var(--szafir) 55%, transparent);
+  box-shadow: 0 8px 24px -16px #21252966;
+}
+
+.news-card--compact .news-card__media {
+  width: 84px;
+  aspect-ratio: 1;
+  border-radius: var(--r-sm);
+  background: var(--grafit);
+}
+
+/* miniatura bez zdjęcia: ukośne belki z logo */
+.news-card--compact .news-card__placeholder {
+  position: relative;
+  background: none;
+}
+
+.news-card--compact .news-card__placeholder::before,
+.news-card--compact .news-card__placeholder::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  transform: rotate(28deg);
+  transition: translate 0.6s var(--ease);
+}
+
+.news-card--compact .news-card__placeholder::before {
+  left: 46%;
+  width: 16%;
+  background: linear-gradient(var(--szafir), transparent 95%);
+}
+
+.news-card--compact .news-card__placeholder::after {
+  left: 30%;
+  width: 6%;
+  background: linear-gradient(var(--cyjan), transparent 95%);
+}
+
+.news-card--compact:hover .news-card__placeholder::before {
+  translate: 8px 0;
+}
+
+.news-card--compact:hover .news-card__placeholder::after {
+  translate: 4px 0;
+}
+
+.news-card--compact:nth-child(2) .news-card__media {
+  background: var(--szafir-deep);
+}
+
+.news-card--compact:nth-child(2) .news-card__placeholder::before {
+  background: linear-gradient(var(--wrzos), transparent 95%);
+}
+
+.news-card--compact:nth-child(3) .news-card__media {
+  background: var(--wrzos);
+}
+
+.news-card--compact:nth-child(3) .news-card__placeholder::before {
+  background: linear-gradient(var(--grafit), transparent 95%);
+}
+
+.news-card--compact .news-card__body {
+  gap: 4px;
+  padding: 0;
+  min-width: 0;
+}
+
+.news-card--compact .news-card__date {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.news-card--compact .news-card__title {
+  font: 500 17px / 1.25 var(--font-display);
+  letter-spacing: -0.01em;
+  transition: color 0.2s;
+}
+
+.news-card--compact:hover .news-card__title {
+  color: var(--link);
+}
+
+/* ---------- wariant kompaktowy — mockup: .card ---------- */
+.news-card--compact {
+  grid-template-columns: 84px 1fr;
+  gap: 14px;
+  align-items: center;
+  min-width: 0;
+  padding: 10px;
+  overflow: visible;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.news-card--compact:hover {
+  transform: none;
+  border-color: color-mix(in oklab, var(--szafir) 55%, transparent);
+  box-shadow: 0 8px 24px -16px #21252966;
+}
+
+.news-card--compact .news-card__media {
+  width: 84px;
+  aspect-ratio: 1;
+  border-radius: var(--r-sm);
+  background: var(--grafit);
+}
+
+/* miniatura bez zdjęcia: ukośne belki z logo */
+.news-card--compact .news-card__placeholder {
+  position: relative;
+  background: none;
+}
+
+.news-card--compact .news-card__placeholder::before,
+.news-card--compact .news-card__placeholder::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  transform: rotate(28deg);
+  transition: translate 0.6s var(--ease);
+}
+
+.news-card--compact .news-card__placeholder::before {
+  left: 46%;
+  width: 16%;
+  background: linear-gradient(var(--szafir), transparent 95%);
+}
+
+.news-card--compact .news-card__placeholder::after {
+  left: 30%;
+  width: 6%;
+  background: linear-gradient(var(--cyjan), transparent 95%);
+}
+
+.news-card--compact:hover .news-card__placeholder::before {
+  translate: 8px 0;
+}
+
+.news-card--compact:hover .news-card__placeholder::after {
+  translate: 4px 0;
+}
+
+.news-card--compact:nth-child(2) .news-card__media {
+  background: var(--szafir-deep);
+}
+
+.news-card--compact:nth-child(2) .news-card__placeholder::before {
+  background: linear-gradient(var(--wrzos), transparent 95%);
+}
+
+.news-card--compact:nth-child(3) .news-card__media {
+  background: var(--wrzos);
+}
+
+.news-card--compact:nth-child(3) .news-card__placeholder::before {
+  background: linear-gradient(var(--grafit), transparent 95%);
+}
+
+.news-card--compact .news-card__body {
+  gap: 4px;
+  padding: 0;
+  min-width: 0;
+}
+
+.news-card--compact .news-card__date {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+}
+
+.news-card--compact .news-card__title {
+  font: 500 17px / 1.25 var(--font-display);
+  letter-spacing: -0.01em;
+  transition: color 0.2s;
+}
+
+.news-card--compact:hover .news-card__title {
+  color: var(--link);
 }
 
 @media (prefers-reduced-motion: reduce) {
