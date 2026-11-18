@@ -5,23 +5,25 @@
 </template>
 
 <style scoped>
+/* mockup: .eyebrow */
 .ui-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  margin: 0 0 0.85rem;
+  gap: 10px;
+  margin: 0 0 12px;
   color: var(--muted);
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
 }
 
 .ui-eyebrow::after {
   content: '';
-  display: block;
   width: 28px;
   height: 1px;
-  background: var(--line);
+  background: currentColor;
+  opacity: 0.5;
 }
 </style>

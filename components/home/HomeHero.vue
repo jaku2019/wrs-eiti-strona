@@ -5,28 +5,33 @@ const props = defineProps<{
   eyebrow?: string
 }>()
 
-const { reduced } = useReducedMotion()
 const titleRef = ref<HTMLElement | null>(null)
 
-const words = computed(() => {
+const emWords = computed(() => {
   const raw = props.title.trim() || 'Wiemy, jak to działa.'
   return raw.split(/\s+/).filter(Boolean)
 })
 
+/** mockup: „Wiemy,” | „jak to działa.” — reszta po pierwszym słowie jako jedna fraza bez łamania. */
+const emChunks = computed(() => {
+  const [first, ...rest] = emWords.value
+  return rest.length ? [first!, rest.join(' ')] : [first!]
+})
+
 onMounted(() => {
-  if (reduced.value || !titleRef.value) return
-  const spans = titleRef.value.querySelectorAll<HTMLElement>('.home-hero__word')
-  spans.forEach((el, i) => {
-    el.animate(
+  if (!titleRef.value) return
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  titleRef.value.querySelectorAll<HTMLElement>('.w').forEach((w, i) => {
+    w.animate(
       [
-        { opacity: 0, filter: 'blur(8px)', transform: 'translateY(0.45em)' },
-        { opacity: 1, filter: 'blur(0)', transform: 'translateY(0)' },
+        { opacity: 0, transform: 'translateY(.4em)', filter: 'blur(8px)' },
+        { opacity: 1, transform: 'none', filter: 'none' },
       ],
       {
-        duration: 720,
-        delay: 80 + i * 70,
-        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-        fill: 'forwards',
+        duration: 900,
+        delay: 120 + i * 110,
+        easing: 'cubic-bezier(.2,.7,.2,1)',
+        fill: 'backwards',
       },
     )
   })
@@ -34,32 +39,33 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="home-hero section">
-    <HomeSignal />
-    <div class="container home-hero__inner">
-      <UiEyebrow>
+  <div class="hero">
+    <ClientOnly>
+      <HomeSignal />
+    </ClientOnly>
+    <div class="container hero__inner">
+      <UiEyebrow class="hero__eyebrow">
         {{
           eyebrow
             || 'Wydziałowa Rada Samorządu · Wydział Elektroniki i Technik Informacyjnych PW'
         }}
       </UiEyebrow>
-      <h1 class="home-hero__title">
-        <span class="home-hero__plain">Masz sprawę?</span>
-        <em
-          ref="titleRef"
-          class="home-hero__em"
+      <h1
+        ref="titleRef"
+        class="hero__title"
+      >
+        <span class="w">Masz</span> <span class="w">sprawę?</span>
+        <template
+          v-for="(chunk, i) in emChunks"
+          :key="i"
         >
-          <span
-            v-for="(word, i) in words"
-            :key="`${word}-${i}`"
-            class="home-hero__word"
-          >{{ word }}&nbsp;</span>
-        </em>
+          {{ ' ' }}<span class="w"><em>{{ chunk }}</em></span>
+        </template>
       </h1>
-      <p class="home-hero__lead">
+      <p class="hero__lead">
         {{ lead }}
       </p>
-      <div class="home-hero__actions">
+      <div class="hero__cta">
         <UiButton href="#baza">
           Przejdź do bazy wiedzy
         </UiButton>
@@ -71,71 +77,96 @@ onMounted(() => {
         </UiButton>
       </div>
     </div>
-  </section>
+    <div
+      class="hero__cut"
+      aria-hidden="true"
+    />
+  </div>
 </template>
 
 <style scoped>
-.home-hero {
+/* mockup: .hero */
+.hero {
   position: relative;
+  overflow: clip;
   background: var(--bg);
-  overflow: hidden;
-  /* Skos w kolor następnej sekcji (--surface) */
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 48px), 0 100%);
-  padding-bottom: calc(var(--section-y) + 24px);
 }
 
-.home-hero__inner {
+.hero__inner {
   position: relative;
-  z-index: 1;
-  max-width: min(36rem, 100%);
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  min-height: min(80vh, 740px);
+  padding-block: 72px 150px;
 }
 
-.home-hero__title {
-  margin-bottom: 0.65em;
+.hero__eyebrow {
+  position: relative;
+  margin: 0;
 }
 
-.home-hero__plain {
-  display: block;
+.hero__title {
+  position: relative;
+  max-width: 11ch;
+  margin-top: 22px;
+  font-size: clamp(50px, 8vw, 108px);
+  letter-spacing: -0.03em;
 }
 
-.home-hero__em {
-  display: block;
-  font-style: italic;
-  color: var(--accent);
-}
-
-.home-hero__word {
+.hero__title .w {
   display: inline-block;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .home-hero__word {
-    opacity: 0;
-  }
+.hero__title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--link);
 }
 
-.home-hero__lead {
-  max-width: 34rem;
+.hero__lead {
+  position: relative;
+  margin-top: 26px;
+  max-width: 44ch;
+  font-size: clamp(17px, 2vw, 20px);
   color: var(--muted);
-  font-size: 1.05rem;
-  margin-bottom: 0;
 }
 
-.home-hero__actions {
+.hero__cta {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.65rem;
+  gap: 12px;
+  align-items: center;
+  margin-top: 40px;
 }
 
-@media (max-width: 900px) {
-  .home-hero {
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 32px), 0 100%);
-    padding-bottom: calc(var(--section-y) + 72px);
-  }
+/* skośne cięcie dolnej krawędzi w kolor następnej sekcji */
+.hero__cut {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 96px;
+  background: var(--surface);
+  clip-path: polygon(0 100%, 100% 100%, 100% 0, 0 78%);
+}
 
-  .home-hero__inner {
-    max-width: 100%;
+/* parallax treści przy przewijaniu (scroll-driven) */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__inner > * {
+      animation: hero-parallax linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 70vh;
+    }
+  }
+}
+
+@keyframes hero-parallax {
+  to {
+    translate: 0 -40px;
+    opacity: 0.2;
   }
 }
 </style>

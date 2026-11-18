@@ -12,33 +12,30 @@ const { data: items } = await usePublishedAktualnosci({
 </script>
 
 <template>
-  <div class="section">
-    <div class="container">
-      <LayoutBreadcrumbs
-        :items="[
-          { label: 'Strona główna', to: '/' },
-          { label: 'Aktualności' },
-        ]"
-      />
-      <UiEyebrow>Newsy</UiEyebrow>
-      <h1>Aktualności</h1>
-      <p class="lead">
-        Ogłoszenia i komunikaty Wydziałowej Rady Samorządu WEiTI.
-      </p>
+  <div>
+    <header class="page-head">
+      <div class="container">
+        <LayoutBreadcrumbs
+          :items="[
+            { label: 'Strona główna', to: '/' },
+            { label: 'Aktualności' },
+          ]"
+        />
+        <h1>Aktualności</h1>
+        <p class="lead">
+          Ogłoszenia i komunikaty Wydziałowej Rady Samorządu WEiTI.
+        </p>
+      </div>
+    </header>
 
+    <div class="container page-body">
       <NewsList :items="items ?? []" />
     </div>
   </div>
 </template>
 
 <style scoped>
-h1 {
-  font-size: clamp(36px, 5vw, 64px);
-}
-
-.lead {
-  max-width: 36rem;
-  color: var(--muted);
-  margin-bottom: 2rem;
+.page-body {
+  padding: 8px 0 96px;
 }
 </style>

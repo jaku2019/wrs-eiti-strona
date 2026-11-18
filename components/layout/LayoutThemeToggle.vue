@@ -11,7 +11,7 @@ const label = computed(() =>
     variant="icon"
     icon-only
     :icon="theme === 'dark' ? 'sun' : 'moon'"
-    :tip="label"
+    tip="Motyw"
     :aria-label="label"
     @click="toggleTheme($event)"
   />

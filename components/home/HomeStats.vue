@@ -66,7 +66,7 @@ onMounted(() => {
 <template>
   <section
     ref="root"
-    class="home-stats section section--compact"
+    class="home-stats"
     aria-label="Liczniki"
   >
     <div class="container">
@@ -78,14 +78,18 @@ onMounted(() => {
           <NuxtLink
             v-if="stat.to"
             :to="stat.to"
-            class="stat-tile stat-tile--link"
+            class="stat-tile stat-tile--link reveal"
           >
             <span class="stat-tile__value">{{ display[i] ?? 0 }}</span>
-            <span class="stat-tile__label">{{ stat.label }}</span>
+            <span class="stat-tile__label">{{ stat.label }}
+              <UiIcon
+                name="arrowRight"
+                :size="16"
+              /></span>
           </NuxtLink>
           <div
             v-else
-            class="stat-tile"
+            class="stat-tile reveal"
           >
             <span class="stat-tile__value">{{ display[i] ?? 0 }}</span>
             <span class="stat-tile__label">{{ stat.label }}</span>
@@ -97,9 +101,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+/* mockup: .stats / .stat (kontener z padding-bottom 24px) */
 .home-stats {
   background: var(--bg);
-  padding-top: 0;
+  padding-bottom: 24px;
 }
 
 .home-stats__grid {
@@ -107,61 +112,48 @@ onMounted(() => {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
 }
 
 .stat-tile {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  padding: 1.15rem 1.1rem;
+  display: block;
+  height: 100%;
+  padding: 28px;
   border: 1px solid var(--line);
   border-radius: var(--r);
-  background: var(--surface);
-}
-
-.stat-tile--link {
-  text-decoration: none;
   color: inherit;
+  text-decoration: none;
   transition:
-    border-color 0.2s ease,
-    transform 0.2s ease;
+    border-color 0.2s,
+    background 0.2s;
 }
 
 .stat-tile--link:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--szafir) 60%, transparent);
+  background: var(--tint);
 }
 
 .stat-tile__value {
-  font-family: var(--font-display);
-  font-size: clamp(32px, 4vw, 44px);
-  font-weight: 500;
-  letter-spacing: -0.03em;
+  display: block;
+  font: 500 clamp(48px, 6vw, 72px) / 1 var(--font-display);
   color: var(--heading);
-  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
 .stat-tile__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
   font-size: 14px;
   color: var(--muted);
-  line-height: 1.35;
-}
-
-@media (max-width: 900px) {
-  .home-stats__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stat-tile--link {
+  .stat-tile {
     transition: none;
-  }
-
-  .stat-tile--link:hover {
-    transform: none;
   }
 }
 </style>

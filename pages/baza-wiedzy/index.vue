@@ -51,7 +51,7 @@ const byCategory = computed(() =>
 
 <template>
   <div>
-    <div class="section">
+    <header class="page-head">
       <div class="container">
         <LayoutBreadcrumbs
           :items="[
@@ -59,14 +59,15 @@ const byCategory = computed(() =>
             { label: 'Baza wiedzy' },
           ]"
         />
-        <UiEyebrow>Baza wiedzy</UiEyebrow>
         <h1>Baza wiedzy</h1>
         <p class="lead">
           Odpowiedzi na najczęstsze sprawy studenckie — kategorie i artykuły z&nbsp;CMS.
         </p>
-
-        <KbCategoryList :counts="counts" />
       </div>
+    </header>
+
+    <div class="container kb-cats">
+      <KbCategoryList :counts="counts" />
     </div>
 
     <div class="section section--surface">
@@ -119,14 +120,8 @@ const byCategory = computed(() =>
 </template>
 
 <style scoped>
-h1 {
-  font-size: clamp(36px, 5vw, 64px);
-}
-
-.lead {
-  max-width: 36rem;
-  color: var(--muted);
-  margin-bottom: 2rem;
+.kb-cats {
+  padding: 8px 0 96px;
 }
 
 .section-head h2 {

@@ -28,10 +28,8 @@ const pageItems: PriorityNavItem[] = [
   { id: 'faq', label: 'FAQ', href: '/faq', kind: 'page' },
 ]
 
-/** On home: sections + pages. On subpages: pages only (sections still reachable via logo/home). */
-const navItems = computed<PriorityNavItem[]>(() =>
-  isHome.value ? [...sectionItems.value, ...pageItems] : [...pageItems],
-)
+/** Sections + pages everywhere (as in the mockup); on subpages sections link to `/#…`. */
+const navItems = computed<PriorityNavItem[]>(() => [...sectionItems.value, ...pageItems])
 
 const sectionIds = computed(() =>
   isHome.value ? sectionItems.value.map((i) => i.id) : [],
@@ -152,8 +150,23 @@ function onSectionShortcut(event: KeyboardEvent) {
   el?.scrollIntoView({ behavior: 'smooth' })
 }
 
+let ro: ResizeObserver | null = null
+
 onMounted(() => {
   remasure()
+  // Initial measure can run before layout/fonts settle — re-measure whenever
+  // the row's available space changes.
+  const row = navEl.value?.parentElement
+  if (row && 'ResizeObserver' in window) {
+    let last = 0
+    ro = new ResizeObserver(([entry]) => {
+      const w = Math.round(entry?.contentRect.width ?? 0)
+      if (w === last) return
+      last = w
+      remasure()
+    })
+    ro.observe(row)
+  }
   window.addEventListener('resize', remasure)
   window.addEventListener('keydown', onSectionShortcut)
   // Fonts can shift widths.
@@ -161,6 +174,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  ro?.disconnect()
   window.removeEventListener('resize', remasure)
   window.removeEventListener('keydown', onSectionShortcut)
 })
@@ -216,6 +230,7 @@ const mobileMenuItems = computed(() => navItems.value)
           <span
             v-if="index > 0 && visibleItems[index - 1]?.kind === 'section' && item.kind === 'page'"
             class="navbar__sep"
+            data-nav-sep
             aria-hidden="true"
           />
           <NuxtLink
@@ -226,7 +241,7 @@ const mobileMenuItems = computed(() => navItems.value)
             :aria-current="itemIsActive(item) ? 'page' : undefined"
           >
             <span data-nav-label>{{ item.label }}</span>
-            <UiIcon name="externalLink" :size="12" />
+            <UiIcon name="arrowUpRight" :size="14" />
           </NuxtLink>
           <a
             v-else
@@ -272,29 +287,31 @@ const mobileMenuItems = computed(() => navItems.value)
 </template>
 
 <style scoped>
+/* mockup: header.nav */
 .navbar {
   position: sticky;
   top: 0;
   z-index: 50;
+  overflow-x: clip;
   border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: color-mix(in oklab, var(--bg) 82%, transparent);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
   view-transition-name: site-navbar;
 }
 
 .navbar__inner {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  min-height: 64px;
+  gap: 28px;
+  height: 68px;
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
-  color: inherit;
+  gap: 12px;
+  color: var(--heading);
   text-decoration: none;
   flex-shrink: 0;
 }
@@ -317,16 +334,16 @@ const mobileMenuItems = computed(() => navItems.value)
 }
 
 .brand__text {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   line-height: 1.1;
-  font-size: 13px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--muted);
 }
 
 .brand__text strong {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 600;
+  font: 600 20px / 1 var(--font-display);
+  color: var(--heading);
 }
 
 .navbar__nav {
@@ -335,8 +352,7 @@ const mobileMenuItems = computed(() => navItems.value)
   align-items: center;
   flex: 1;
   min-width: 0;
-  gap: 0.15rem;
-  margin-inline: 0.5rem 0.75rem;
+  gap: 2px;
   overflow: hidden;
 }
 
@@ -344,59 +360,82 @@ const mobileMenuItems = computed(() => navItems.value)
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  gap: 4px;
   height: 36px;
-  padding: 0 0.55rem;
-  color: var(--text);
+  padding: 0 12px;
+  color: var(--muted);
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 14.5px;
+  font-weight: 500;
   white-space: nowrap;
   border-radius: var(--r-sm);
   flex-shrink: 0;
+  transition:
+    color 0.2s,
+    background 0.2s;
 }
 
-.navbar__link:hover,
+.navbar__link:hover {
+  color: var(--heading);
+  background: var(--tint);
+}
+
 .navbar__link[aria-current] {
-  color: var(--link);
+  color: var(--heading);
 }
 
 .navbar__link--page :deep(.ui-icon) {
-  opacity: 0.7;
+  opacity: 0.55;
+  transition:
+    opacity 0.2s,
+    transform 0.3s var(--ease);
+}
+
+.navbar__link--page:hover :deep(.ui-icon) {
+  opacity: 1;
+  transform: translate(1px, -1px);
 }
 
 .navbar__sep {
   width: 1px;
-  height: 16px;
-  margin-inline: 0.35rem;
+  height: 18px;
+  margin: 0 10px;
   background: var(--line);
   flex-shrink: 0;
 }
 
+/* kreska 2px pod samym tekstem, 5px pod linią bazową */
 .navbar__indicator {
   position: absolute;
   left: 0;
   bottom: 4px;
   height: 2px;
-  border-radius: 999px;
-  background: var(--link);
+  border-radius: 2px;
+  background: var(--accent);
   opacity: 0;
   pointer-events: none;
   transition:
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.2s ease;
+    transform 0.5s var(--ease),
+    width 0.5s var(--ease),
+    opacity 0.25s;
 }
 
 .navbar__actions {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 6px;
   margin-left: auto;
   flex-shrink: 0;
 }
 
+@media (max-width: 640px) {
+  .navbar__inner {
+    gap: 10px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .navbar__link,
   .navbar__indicator {
     transition: none;
   }

@@ -36,16 +36,15 @@ const faqTeaser = computed(() => {
   return organy?.pytania ?? []
 })
 
-const metaLine = computed(() => {
-  const parts: string[] = []
-  if (sklad.value?.kadencja) parts.push(`Kadencja ${sklad.value.kadencja}`)
+const peopleNoun = computed(() => {
   const n = osoby.value.length
-  const noun = n === 1 ? 'osoba' : n >= 2 && n <= 4 ? 'osoby' : 'osób'
-  parts.push(`${n} ${noun}`)
-  const updated = formatSkladDate(sklad.value?.aktualizacja)
-  if (updated) parts.push(`Aktualizacja: ${updated}`)
-  return parts
+  const last2 = n % 100
+  const last = n % 10
+  if (n === 1) return 'osoba'
+  if (last >= 2 && last <= 4 && !(last2 >= 12 && last2 <= 14)) return 'osoby'
+  return 'osób'
 })
+const updatedLabel = computed(() => formatSkladDate(sklad.value?.aktualizacja))
 
 async function withFilterTransition(update: () => void | Promise<void>) {
   if (
@@ -76,20 +75,40 @@ function setQuery(value: string) {
 
 <template>
   <div class="sklad-page">
-    <header class="section section--compact sklad-hero">
+    <header class="page-head">
       <div class="container">
-        <nav class="crumbs" aria-label="Okruszki">
-          <NuxtLink to="/">Strona główna</NuxtLink>
-          <span aria-hidden="true">›</span>
-          <span>Skład</span>
-        </nav>
-        <UiEyebrow>Samorząd</UiEyebrow>
+        <LayoutBreadcrumbs
+          :items="[{ label: 'Strona główna', to: '/' }, { label: 'Skład' }]"
+        />
         <h1>Skład <em>samorządu</em></h1>
         <p class="lead">
           TODO(treść): krótki opis składu samorządu WEiTI w bieżącej kadencji.
         </p>
-        <ul class="meta" aria-label="Metadane składu">
-          <li v-for="(item, i) in metaLine" :key="i">{{ item }}</li>
+        <ul
+          class="page-meta"
+          aria-label="Metadane składu"
+        >
+          <li v-if="sklad?.kadencja">
+            <UiIcon
+              name="calendar"
+              :size="14"
+            />
+            Kadencja {{ sklad.kadencja }}
+          </li>
+          <li>
+            <UiIcon
+              name="users"
+              :size="14"
+            />
+            <b>{{ osoby.length }}</b>&nbsp;{{ peopleNoun }}
+          </li>
+          <li v-if="updatedLabel">
+            <UiIcon
+              name="refresh"
+              :size="14"
+            />
+            Aktualizacja: {{ updatedLabel }}
+          </li>
         </ul>
       </div>
     </header>
@@ -103,64 +122,29 @@ function setQuery(value: string) {
       @update:query="setQuery"
     />
 
-    <section class="section section--compact" aria-label="Siatka osób">
-      <div class="container">
-        <PeopleGrid :osoby="filtered" :query="query" />
-      </div>
-    </section>
+    <div class="container">
+      <section
+        class="block"
+        aria-label="Siatka osób"
+      >
+        <PeopleGrid
+          :osoby="filtered"
+          :query="query"
+        />
+      </section>
 
-    <PeopleOrgansList v-if="przedstawiciele.length" :items="przedstawiciele" />
-    <PeopleFaqTeaser :pytania="faqTeaser" />
+      <PeopleOrgansList
+        v-if="przedstawiciele.length"
+        :items="przedstawiciele"
+      />
+      <PeopleFaqTeaser :pytania="faqTeaser" />
+    </div>
   </div>
 </template>
 
 <style scoped>
-.sklad-hero {
-  padding-bottom: 1.5rem;
-}
-
-.crumbs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  margin-bottom: 1.25rem;
-  font-size: 14px;
-  color: var(--muted);
-}
-
-.crumbs a {
-  color: var(--link);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.sklad-hero h1 {
-  font-size: clamp(40px, 6vw, 72px);
-  margin-bottom: 0.55rem;
-}
-
-.lead {
-  max-width: 38rem;
-  margin: 0 0 1.1rem;
-  color: var(--muted);
-  font-size: 17px;
-}
-
-.meta {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem 0.85rem;
-  color: var(--muted);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.meta li:not(:last-child)::after {
-  content: '·';
-  margin-left: 0.85rem;
-  color: var(--line);
+/* mockup: .block */
+.block {
+  padding: 36px 0;
 }
 </style>

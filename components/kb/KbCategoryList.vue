@@ -29,33 +29,39 @@ defineProps<{
 </template>
 
 <style scoped>
+/* jak kafelki „Najczęstsze sprawy” z mockupu (.tile), na tle --bg więc karta --surface */
 .kb-cats {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px;
 }
 
 .kb-cat {
-  display: grid;
-  grid-template-columns: 44px 1fr auto;
-  gap: 0.85rem;
-  align-items: start;
-  padding: 1.1rem 1.15rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 28px;
+  height: 100%;
+  min-height: 210px;
+  padding: 24px;
   border: 1px solid var(--line);
   border-radius: var(--r);
-  background: var(--bg);
+  background: var(--surface);
+  color: var(--text);
   text-decoration: none;
-  color: inherit;
   transition:
-    border-color 0.2s ease,
-    transform 0.2s ease;
+    border-color 0.25s,
+    box-shadow 0.25s,
+    transform 0.25s var(--ease);
 }
 
 .kb-cat:hover {
-  border-color: var(--accent);
+  border-color: color-mix(in oklab, var(--szafir) 55%, transparent);
+  box-shadow: 0 12px 30px -18px #3c3c4c66;
   transform: translateY(-2px);
 }
 
@@ -68,8 +74,8 @@ defineProps<{
   background: var(--tint);
   color: var(--link);
   transition:
-    background 0.2s ease,
-    color 0.2s ease;
+    background 0.25s,
+    color 0.25s;
 }
 
 .kb-cat:hover .kb-cat__icon {
@@ -77,32 +83,27 @@ defineProps<{
   color: #fff;
 }
 
-:root[data-theme='dark'] .kb-cat:hover .kb-cat__icon {
-  color: var(--grafit-deep);
-}
-
 .kb-cat__title {
   display: block;
-  font-family: var(--font-sans);
-  font-size: 19px;
-  font-weight: 600;
+  font: 600 19px / 1.25 var(--font-sans);
+  letter-spacing: -0.01em;
   color: var(--heading);
-  margin-bottom: 0.25rem;
 }
 
 .kb-cat__desc {
   display: block;
+  margin-top: 6px;
   font-size: 14px;
-  line-height: 1.45;
   color: var(--muted);
 }
 
 .kb-cat__count {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  font: 500 22px / 1 var(--font-display);
   color: var(--muted);
-  line-height: 1;
-  padding-top: 0.2rem;
+  font-variant-numeric: tabular-nums;
 }
 
 @media (prefers-reduced-motion: reduce) {

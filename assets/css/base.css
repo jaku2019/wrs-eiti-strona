@@ -7,6 +7,7 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 84px;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -20,13 +21,12 @@
     min-height: 100vh;
     background: var(--bg);
     color: var(--text);
-    font-family: var(--font-sans);
-    font-size: var(--text-body);
-    line-height: var(--lh-body);
+    font: 400 var(--text-body) / var(--lh-body) var(--font-sans);
     font-feature-settings: 'cv11';
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Wartości 1:1 z mockup/site.css (@layer base) */
   h1,
   h2,
   h3,
@@ -35,8 +35,18 @@
     color: var(--heading);
     font-weight: 500;
     letter-spacing: -0.02em;
-    line-height: 1.15;
-    margin: 0 0 0.5em;
+    line-height: 1.05;
+    margin: 0;
+    text-wrap: balance;
+    font-optical-sizing: auto;
+  }
+
+  h3,
+  h4 {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
   }
 
   h1 {
@@ -51,24 +61,24 @@
   h1 em,
   h2 em {
     font-style: italic;
-    color: var(--accent);
+    font-weight: 400;
+    color: var(--link);
   }
 
   p {
-    margin: 0 0 1em;
+    margin: 0;
+    text-wrap: pretty;
   }
 
   a {
     color: var(--link);
-    text-underline-offset: 3px;
+    text-decoration: none;
   }
 
-  a:focus-visible,
-  button:focus-visible,
-  summary:focus-visible,
-  [tabindex]:focus-visible {
-    outline: 2px solid var(--accent);
+  :focus-visible {
+    outline: 2px solid var(--szafir);
     outline-offset: 3px;
+    border-radius: 4px;
   }
 
   img {
@@ -106,7 +116,7 @@
     border: 0;
   }
 
-  /* Placeholder zdjęcia osoby — inicjały + ukośna belka */
+  /* Placeholder zdjęcia osoby — mockup: .photo (inicjały + ukośna belka w kolorze grupy) */
   .avatar-placeholder {
     position: relative;
     display: grid;
@@ -114,59 +124,89 @@
     aspect-ratio: 4 / 5;
     border-radius: var(--r);
     background: var(--wrzos-soft);
-    color: var(--grafit);
-    font-family: var(--font-display);
-    font-size: 1.75rem;
-    font-weight: 600;
     overflow: hidden;
     user-select: none;
   }
 
-  .avatar-placeholder::after {
+  .avatar-placeholder span {
+    position: relative;
+    font: 500 44px / 1 var(--font-display);
+    color: color-mix(in oklab, var(--pw-szary-90) 55%, transparent);
+  }
+
+  :root[data-theme='dark'] .avatar-placeholder span {
+    color: #ffffff90;
+  }
+
+  .avatar-placeholder::before {
     content: '';
     position: absolute;
-    inset: auto -20% -35% auto;
-    width: 70%;
-    height: 55%;
-    background: linear-gradient(
-      135deg,
-      transparent 0%,
-      color-mix(in srgb, var(--avatar-bar, var(--szafir)) 55%, transparent) 45%,
-      color-mix(in srgb, var(--cyjan) 45%, transparent) 100%
-    );
-    transform: skewX(-18deg);
-    pointer-events: none;
+    top: -20%;
+    bottom: -20%;
+    left: 60%;
+    width: 15%;
+    background: linear-gradient(var(--avatar-bar, var(--szafir)), transparent 90%);
+    transform: rotate(28deg);
+    opacity: 0.75;
+    transition: left 0.5s var(--ease);
   }
 
-  .avatar-placeholder[data-group='prezydium'] {
-    --avatar-bar: var(--szafir-deep);
+  .avatar-placeholder[data-group='prezydium'] { --avatar-bar: var(--szafir); }
+  .avatar-placeholder[data-group='dydaktyka'] { --avatar-bar: var(--szafir-deep); }
+  .avatar-placeholder[data-group='socjalna'] { --avatar-bar: var(--wrzos); }
+  .avatar-placeholder[data-group='kultura'] { --avatar-bar: var(--cyjan); }
+  .avatar-placeholder[data-group='promocja'] { --avatar-bar: var(--szafir); }
+  .avatar-placeholder[data-group='finanse'] { --avatar-bar: var(--grafit); }
+  .avatar-placeholder[data-group='czlonkowie'] { --avatar-bar: var(--wrzos); }
+
+  /* Nagłówek podstrony — mockup: .page-head (sklad.html) */
+  .page-head {
+    padding: 48px 0 28px;
   }
 
-  .avatar-placeholder[data-group='dydaktyka'] {
-    --avatar-bar: var(--szafir);
+  .page-head h1 {
+    margin-top: 18px;
+    font-size: clamp(42px, 6vw, 72px);
+    letter-spacing: -0.03em;
   }
 
-  .avatar-placeholder[data-group='socjalna'] {
-    --avatar-bar: var(--wrzos);
+  .page-head .lead {
+    margin-top: 14px;
+    max-width: 58ch;
+    color: var(--muted);
+    font-size: 18px;
   }
 
-  .avatar-placeholder[data-group='kultura'] {
-    --avatar-bar: var(--cyjan);
+  .page-meta {
+    list-style: none;
+    margin: 22px 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
-  .avatar-placeholder[data-group='promocja'] {
-    --avatar-bar: color-mix(in srgb, var(--szafir) 70%, var(--wrzos));
+  .page-meta > li {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 13px;
   }
 
-  .avatar-placeholder[data-group='finanse'] {
-    --avatar-bar: var(--grafit);
+  .page-meta b {
+    color: var(--heading);
+    font-weight: 600;
   }
 
-  .avatar-placeholder[data-group='czlonkowie'] {
-    --avatar-bar: var(--szafir);
-  }
-
-  :root[data-theme='dark'] .avatar-placeholder {
-    color: var(--text);
+  mark {
+    background: color-mix(in oklab, var(--szafir) 30%, transparent);
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
   }
 }

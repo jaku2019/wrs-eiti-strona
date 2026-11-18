@@ -23,21 +23,28 @@ function onAddToCalendar() {
     id="kalendarz"
     class="home-events"
   >
-    <div class="home-events__head">
-      <h2>Nadchodzące</h2>
+    <div class="home-events__head reveal">
+      <div>
+        <UiEyebrow>Kalendarz</UiEyebrow>
+        <h2>Nadchodzące</h2>
+      </div>
       <button
         v-if="events.length"
         type="button"
         class="home-events__ics"
         @click="onAddToCalendar"
       >
+        <UiIcon
+          name="calendar"
+          :size="16"
+        />
         Dodaj do kalendarza
       </button>
     </div>
 
     <ul
       v-if="events.length"
-      class="home-events__list"
+      class="home-events__list reveal"
     >
       <li
         v-for="event in events"
@@ -94,32 +101,38 @@ function onAddToCalendar() {
 </template>
 
 <style scoped>
+/* mockup: .sec-head + .list (kalendarz) */
 .home-events__head {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: end;
   justify-content: space-between;
-  gap: 0.75rem 1rem;
-  margin-bottom: 1rem;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.home-events__head :deep(.ui-eyebrow) {
+  margin: 0;
 }
 
 .home-events__head h2 {
-  margin: 0;
+  margin-top: 12px;
 }
 
 .home-events__ics {
   appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border: 0;
   background: none;
   padding: 0;
   color: var(--link);
-  font: inherit;
-  font-size: 15px;
-  font-weight: 600;
+  font: 500 15px var(--font-sans);
   cursor: pointer;
-  text-decoration: underline;
-  text-decoration-color: transparent;
+  text-decoration: underline 1px transparent;
   text-underline-offset: 5px;
+  transition: text-decoration-color 0.25s;
 }
 
 .home-events__ics:hover {
@@ -130,63 +143,62 @@ function onAddToCalendar() {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  display: grid;
+  gap: 8px;
 }
 
 .event-row {
   display: grid;
   grid-template-columns: 44px 1fr auto;
-  gap: 0.85rem;
+  gap: 14px;
   align-items: center;
-  min-height: 64px;
-  padding: 0.35rem 0;
-  border-bottom: 1px solid var(--line);
+  padding: 8px 14px 8px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  transition: border-color 0.2s;
 }
 
-.event-row:last-child {
-  border-bottom: 0;
+.event-row:hover {
+  border-color: color-mix(in oklab, var(--szafir) 55%, transparent);
 }
 
 .event-row__date {
+  display: grid;
+  place-content: center;
   width: 44px;
   height: 44px;
   border-radius: var(--r-sm);
   background: var(--tint);
-  color: var(--link);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
+  text-align: center;
 }
 
 .event-row__day {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 500;
+  font: 500 18px / 1 var(--font-display);
+  color: var(--heading);
 }
 
 .event-row__month {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: lowercase;
+  display: block;
   margin-top: 2px;
+  font: 600 9.5px var(--font-sans);
+  color: var(--link);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .event-row__title {
-  margin: 0 0 0.2rem;
+  margin: 0;
   font-size: 15px;
   font-weight: 600;
-  color: var(--heading);
+  line-height: 1.3;
+  color: var(--text);
 }
 
 .event-row__meta {
   margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem 0.85rem;
+  gap: 2px 12px;
   font-size: 13px;
   color: var(--muted);
 }
@@ -194,7 +206,12 @@ function onAddToCalendar() {
 .event-row__meta span {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 5px;
+}
+
+.event-row__meta :deep(.ui-icon) {
+  width: 13px;
+  height: 13px;
 }
 
 .event-row__tag {
