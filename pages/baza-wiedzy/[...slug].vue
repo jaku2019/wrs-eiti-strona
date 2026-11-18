@@ -110,18 +110,28 @@ useSeoMeta({
         </div>
       </aside>
 
-      <div class="kb-main">
-        <p class="kb-cat">{{ kbCategoryLabel(article.category) }}</p>
-        <h1>{{ article.title }}</h1>
-        <p v-if="article.summary" class="lead">{{ article.summary }}</p>
+      <div
+        class="kb-main"
+        data-pagefind-body
+        data-pagefind-meta="group:Baza wiedzy"
+      >
+        <p class="kb-cat" data-pagefind-ignore>{{ kbCategoryLabel(article.category) }}</p>
+        <h1 data-pagefind-meta="title">{{ article.title }}</h1>
+        <p
+          v-if="article.summary"
+          class="lead"
+          data-pagefind-meta="summary"
+        >
+          {{ article.summary }}
+        </p>
 
-        <KbReadingProgress />
+        <KbReadingProgress data-pagefind-ignore />
 
         <div id="kb-article-body" class="prose">
           <ContentRenderer :value="article" />
         </div>
 
-        <footer class="kb-foot">
+        <footer class="kb-foot" data-pagefind-ignore>
           <p v-if="article.updated">
             Aktualizacja:
             <time :datetime="toDateTimeAttr(article.updated)">

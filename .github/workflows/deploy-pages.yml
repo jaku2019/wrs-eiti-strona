@@ -33,11 +33,14 @@ jobs:
         env:
           SITE_URL_VAR: ${{ vars.SITE_URL }}
           BASE_VAR: ${{ vars.NUXT_APP_BASE_URL }}
-      - name: Generate
+      - name: Generate + Pagefind index
         env:
           SITE_URL: ${{ steps.site.outputs.url }}
           NUXT_APP_BASE_URL: ${{ steps.site.outputs.base }}
+        # `npm run generate` runs `nuxt generate` then `pagefind` (see package.json)
         run: npm run generate
+      - name: Verify Pagefind index
+        run: npm run verify:search
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .output/public

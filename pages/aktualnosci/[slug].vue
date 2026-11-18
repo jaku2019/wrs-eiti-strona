@@ -60,6 +60,7 @@ useHead({
   <article v-if="article" class="section">
     <div class="container article">
       <LayoutBreadcrumbs
+        data-pagefind-ignore
         :items="[
           { label: 'Strona główna', to: '/' },
           { label: 'Aktualności', to: '/aktualnosci' },
@@ -67,36 +68,47 @@ useHead({
         ]"
       />
 
-      <time
-        v-if="article.date"
-        class="article__date"
-        :datetime="toDateTimeAttr(article.date)"
-      >
-        {{ formatDateLong(article.date) }}
-      </time>
-      <h1>{{ article.title }}</h1>
-      <p v-if="zajawka" class="lead">{{ zajawka }}</p>
-
-      <div v-if="imageSrc" class="article__media">
-        <img
-          :src="imageSrc"
-          :alt="article.title || ''"
-          width="1200"
-          height="630"
-          loading="eager"
+      <div data-pagefind-body data-pagefind-meta="group:Aktualności">
+        <time
+          v-if="article.date"
+          class="article__date"
+          :datetime="toDateTimeAttr(article.date)"
+          data-pagefind-ignore
         >
-      </div>
-      <div
-        v-else
-        class="article__media article__media--placeholder"
-        aria-hidden="true"
-      />
+          {{ formatDateLong(article.date) }}
+        </time>
+        <h1 data-pagefind-meta="title">{{ article.title }}</h1>
+        <p
+          v-if="zajawka"
+          class="lead"
+          data-pagefind-meta="summary"
+        >
+          {{ zajawka }}
+        </p>
 
-      <div class="article__body prose">
-        <ContentRenderer :value="article" />
+        <div v-if="imageSrc" class="article__media" data-pagefind-ignore>
+          <img
+            :src="imageSrc"
+            :alt="article.title || ''"
+            width="1200"
+            height="630"
+            loading="eager"
+          >
+        </div>
+        <div
+          v-else
+          class="article__media article__media--placeholder"
+          aria-hidden="true"
+          data-pagefind-ignore
+        />
+
+        <div class="article__body prose">
+          <ContentRenderer :value="article" />
+        </div>
       </div>
 
       <NewsShare
+        data-pagefind-ignore
         :url="absolutePageUrl"
         :title="article.title || 'Aktualność'"
       />

@@ -77,15 +77,15 @@ watch(
 </script>
 
 <template>
-  <div class="faq-page">
+  <div class="faq-page" data-pagefind-body data-pagefind-meta="group:FAQ">
     <header class="section section--compact faq-hero">
       <div class="container">
-        <UiEyebrow>Pomoc</UiEyebrow>
-        <h1>FAQ</h1>
+        <UiEyebrow data-pagefind-ignore>Pomoc</UiEyebrow>
+        <h1 data-pagefind-meta="title">FAQ</h1>
         <p class="lead">
           Najczęstsze pytania o samorząd, organy i sprawy studenckie.
         </p>
-        <label class="faq-search">
+        <label class="faq-search" data-pagefind-ignore>
           <span class="visually-hidden">Szukaj w FAQ</span>
           <UiIcon name="search" :size="16" />
           <input

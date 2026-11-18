@@ -76,13 +76,13 @@ onBeforeUnmount(() => {
 
 <template>
   <details
-    :id="pytanie.id"
     ref="detailsEl"
     class="faq-item"
     @toggle="onToggle"
   >
     <summary class="faq-item__summary">
-      <span class="faq-item__q">{{ pytanie.q }}</span>
+      <!-- h3 + id: Pagefind sub-results deep-link to #question-id -->
+      <h3 :id="pytanie.id" class="faq-item__q">{{ pytanie.q }}</h3>
       <UiIcon name="chevronDown" :size="18" class="faq-item__chevron" />
     </summary>
     <div class="faq-item__body">
@@ -90,6 +90,7 @@ onBeforeUnmount(() => {
       <button
         type="button"
         class="faq-item__copy"
+        data-pagefind-ignore
         :aria-label="copied ? 'Skopiowano link' : 'Kopiuj link do pytania'"
         @click.stop="copyLink"
       >
@@ -127,6 +128,13 @@ onBeforeUnmount(() => {
 
 .faq-item__q {
   min-width: 0;
+  margin: 0;
+  font: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  scroll-margin-top: 88px;
 }
 
 .faq-item__chevron {
