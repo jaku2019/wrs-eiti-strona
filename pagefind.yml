@@ -1,0 +1,5 @@
+# Pagefind index config — run after `nuxt generate` (see package.json scripts).
+site: .output/public
+# Site is Polish-only (`html lang="pl"`); force so the index is always `pl`
+# even if a stray page lacks the attribute.
+force_language: pl

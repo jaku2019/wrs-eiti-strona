@@ -9,7 +9,8 @@ Tymczasowy adres (GitHub Pages): **https://jaku2019.github.io/wrs-eiti-strona/**
 ```bash
 npm ci
 npm run dev
-npm run generate   # → .output/public
+npm run generate      # nuxt generate + Pagefind → .output/public (+ pagefind/)
+npm run verify:search # smoke indeksu (po generate)
 ```
 
 Wymagania: Node ≥ 20.
@@ -18,10 +19,21 @@ Wymagania: Node ≥ 20.
 
 - Nuxt 3 + TypeScript + `@nuxt/content` + `@nuxt/fonts` + `@nuxtjs/sitemap`
 - Tokeny / motyw: `assets/css/{tokens,base,motion}.css`, `useTheme` (anty-mignięcie w `<head>`)
-- Layout A2: `LayoutNavbar` (scroll-spy, Priority+, menu kołowe), `LayoutFooter`, Ctrl&nbsp;K (`LayoutSearchPalette`, dane statyczne do A5), View Transitions
+- Layout: `LayoutNavbar` (scroll-spy, Priority+, menu kołowe), `LayoutFooter`, Ctrl&nbsp;K (`LayoutSearchPalette` + Pagefind), View Transitions
+- Wyszukiwarka: **Pagefind** (indeks po generate; `pagefind.yml`; UI = własna paleta)
 - Komponenty `components/ui/` + galeria `/_ui`
-- Deploy: `.github/workflows/deploy-pages.yml` (bez Facebooka)
+- Deploy: `.github/workflows/deploy-pages.yml` (generate + Pagefind + `verify:search`, bez Facebooka)
 - Treści przykładowe / `TODO(treść)` w `content/`
+
+## Wyszukiwanie (Pagefind / Ctrl K)
+
+1. `npm run generate` buduje SSG, potem `pagefind --site .output/public` (język `pl`).
+2. Indeksowane są strony z `data-pagefind-body`: artykuły bazy wiedzy, FAQ, aktualności.
+3. Paleta Ctrl/⌘&nbsp;K ładuje `/pagefind/pagefind.js` (z uwzględnieniem `baseURL` project Pages).
+4. Polskie znaki: stemming + normalizacja diakrytyków (np. `wydzialowa` ≈ `wydziałowa`).
+5. W `nuxt dev` indeksu nie ma — najpierw `generate`, albo podgląd statyczny (`nuxt preview` / serwowanie `.output/public`).
+
+Smoke: `npm run verify:search` (CI uruchamia to w workflow Pages).
 
 ## Treści i Pages CMS (A3)
 

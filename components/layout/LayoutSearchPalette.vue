@@ -5,6 +5,7 @@ const {
   activeIndex,
   grouped,
   results,
+  status,
   closePalette,
 } = useSearch()
 
@@ -61,8 +62,14 @@ function select(href: string) {
           <kbd class="palette__kbd">Esc</kbd>
         </div>
 
-        <p class="palette__hint">
-          Dane tymczasowe (A2). Pełne wyszukiwanie Pagefind — A5.
+        <p v-if="!query.trim()" class="palette__hint">
+          Szybkie linki. Wpisz frazę, by szukać w bazie wiedzy, FAQ i aktualnościach.
+        </p>
+        <p v-else-if="status === 'missing'" class="palette__hint">
+          Indeks Pagefind niedostępny (uruchom <code>npm run generate</code>).
+        </p>
+        <p v-else-if="status === 'loading'" class="palette__hint" aria-live="polite">
+          Szukam…
         </p>
 
         <div v-if="results.length" class="palette__results" role="listbox">
@@ -93,7 +100,7 @@ function select(href: string) {
             </ul>
           </section>
         </div>
-        <p v-else class="palette__empty">
+        <p v-else-if="query.trim() && status !== 'loading'" class="palette__empty">
           Brak wyników dla „{{ query }}”.
         </p>
       </div>
@@ -162,6 +169,11 @@ function select(href: string) {
   padding: 0.55rem 1rem 0;
   font-size: 12px;
   color: var(--muted);
+}
+
+.palette__hint code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
 }
 
 .palette__results {
