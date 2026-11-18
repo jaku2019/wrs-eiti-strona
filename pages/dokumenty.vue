@@ -54,20 +54,23 @@ const filtered = computed(() =>
 </script>
 
 <template>
-  <div class="section">
-    <div class="container">
-      <LayoutBreadcrumbs
-        :items="[
-          { label: 'Strona główna', to: '/' },
-          { label: 'Dokumenty' },
-        ]"
-      />
-      <UiEyebrow>Materiały</UiEyebrow>
-      <h1>Dokumenty</h1>
-      <p class="lead">
-        Regulaminy, uchwały, protokoły i sprawozdania — pliki PDF z&nbsp;CMS.
-      </p>
+  <div>
+    <header class="page-head">
+      <div class="container">
+        <LayoutBreadcrumbs
+          :items="[
+            { label: 'Strona główna', to: '/' },
+            { label: 'Dokumenty' },
+          ]"
+        />
+        <h1>Dokumenty</h1>
+        <p class="lead">
+          Regulaminy, uchwały, protokoły i sprawozdania — pliki PDF z&nbsp;CMS.
+        </p>
+      </div>
+    </header>
 
+    <div class="container page-body">
       <DocsFilters
         v-model:typ="typ"
         v-model:year="year"
@@ -81,13 +84,7 @@ const filtered = computed(() =>
 </template>
 
 <style scoped>
-h1 {
-  font-size: clamp(36px, 5vw, 64px);
-}
-
-.lead {
-  max-width: 36rem;
-  color: var(--muted);
-  margin-bottom: 0.5rem;
+.page-body {
+  padding: 8px 0 96px;
 }
 </style>

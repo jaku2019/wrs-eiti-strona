@@ -121,23 +121,26 @@ useHead({
   max-width: 760px;
 }
 
+/* rytm jak .page-head z mockupu */
 h1 {
+  margin-top: 10px;
   font-size: clamp(34px, 5vw, 56px);
-  margin-bottom: 0.4em;
+  letter-spacing: -0.03em;
 }
 
 .article__date {
   display: block;
-  font-family: var(--font-display);
-  font-size: 15px;
+  margin-top: 18px;
+  font-size: 13px;
   color: var(--muted);
-  margin-bottom: 0.65rem;
+  font-variant-numeric: tabular-nums;
 }
 
 .lead {
+  margin-top: 14px;
+  max-width: 58ch;
   color: var(--muted);
-  font-size: 1.05rem;
-  max-width: 40rem;
+  font-size: 18px;
 }
 
 .article__media {

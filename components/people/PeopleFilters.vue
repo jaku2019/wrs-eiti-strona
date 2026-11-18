@@ -43,7 +43,7 @@ onMounted(() => {
     ([entry]) => {
       stuck.value = Boolean(entry && !entry.isIntersecting)
     },
-    { threshold: [1], rootMargin: '-64px 0px 0px 0px' },
+    { threshold: [1], rootMargin: '-69px 0px 0px 0px' },
   )
   observer.observe(sentinel)
 })
@@ -79,7 +79,11 @@ onBeforeUnmount(() => {
         </div>
         <label class="filters__search">
           <span class="visually-hidden">Szukaj osoby lub funkcji</span>
-          <UiIcon name="search" :size="16" />
+          <UiIcon
+            name="search"
+            :size="16"
+            class="filters__search-icon"
+          />
           <input
             :value="query"
             type="search"
@@ -95,29 +99,27 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+/* mockup: .toolbar / .chips / .search (sklad.html) */
 .filters-wrap {
-  position: relative;
+  display: contents;
 }
 
 .filters-sentinel {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1px;
   height: 1px;
+  margin-bottom: -1px;
   pointer-events: none;
 }
 
 .filters {
   position: sticky;
-  top: 64px;
-  z-index: 40;
-  padding-block: 0.85rem;
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  top: 68px;
+  z-index: 20;
+  padding: 12px 0;
+  background: color-mix(in oklab, var(--bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid transparent;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s;
 }
 
 .filters--stuck {
@@ -128,70 +130,80 @@ onBeforeUnmount(() => {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.75rem 1rem;
+  gap: 12px;
 }
 
 .filters__chips {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
+  flex-wrap: nowrap;
+  gap: 6px;
   flex: 1;
   min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.filters__chips::-webkit-scrollbar {
+  display: none;
 }
 
 .filters__count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.25rem;
-  padding: 0 0.3rem;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-  background: color-mix(in srgb, var(--line) 55%, transparent);
-}
-
-.filters__chips :deep(.ui-chip--active) .filters__count {
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  margin-left: 6px;
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
 }
 
 .filters__search {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  min-height: 40px;
-  min-width: min(100%, 260px);
-  padding: 0 0.75rem;
-  border: 1px solid var(--line);
-  border-radius: var(--r-sm);
-  background: var(--surface);
-  color: var(--muted);
+  position: relative;
+  width: min(260px, 100%);
 }
 
-.filters__search:focus-within {
-  border-color: var(--accent);
-  color: var(--accent);
+.filters__search-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  translate: 0 -50%;
+  color: var(--muted);
+  pointer-events: none;
 }
 
 .filters__search input {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  background: transparent;
+  width: 100%;
+  height: 36px;
+  padding: 0 12px 0 34px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--surface);
   color: var(--text);
-  font: inherit;
-  font-size: 14px;
+  font: 400 14px var(--font-sans);
   outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.filters__search input:focus {
+  border-color: var(--szafir);
+  box-shadow: 0 0 0 3px var(--tint);
 }
 
 .filters__search input::placeholder {
   color: var(--muted);
 }
 
+@media (max-width: 640px) {
+  .filters__chips {
+    flex-basis: 100%;
+  }
+
+  .filters__search {
+    width: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .filters {
+  .filters,
+  .filters__search input {
     transition: none;
   }
 }

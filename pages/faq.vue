@@ -78,9 +78,12 @@ watch(
 
 <template>
   <div class="faq-page" data-pagefind-body data-pagefind-meta="group:FAQ">
-    <header class="section section--compact faq-hero">
+    <header class="page-head faq-hero">
       <div class="container">
-        <UiEyebrow data-pagefind-ignore>Pomoc</UiEyebrow>
+        <LayoutBreadcrumbs
+          data-pagefind-ignore
+          :items="[{ label: 'Strona główna', to: '/' }, { label: 'FAQ' }]"
+        />
         <h1 data-pagefind-meta="title">FAQ</h1>
         <p class="lead">
           Najczęstsze pytania o samorząd, organy i sprawy studenckie.
@@ -114,18 +117,13 @@ watch(
 </template>
 
 <style scoped>
-.faq-hero h1 {
-  font-size: clamp(40px, 6vw, 72px);
-  margin-bottom: 0.55rem;
-}
-
-.lead {
-  max-width: 36rem;
-  margin: 0 0 1.35rem;
-  color: var(--muted);
+/* nagłówek: wspólne .page-head (base.css) */
+.faq-search {
+  margin-top: 22px;
 }
 
 .faq-search {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;

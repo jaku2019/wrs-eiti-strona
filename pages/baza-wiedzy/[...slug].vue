@@ -169,20 +169,25 @@ useSeoMeta({
   grid-column: 1 / -1;
 }
 
+/* rytm jak .page-head z mockupu */
 h1 {
+  margin-top: 10px;
   font-size: clamp(32px, 4.5vw, 52px);
+  letter-spacing: -0.03em;
 }
 
 .kb-cat {
-  margin: 0 0 0.45rem;
+  margin: 0;
   font-size: 13px;
   font-weight: 600;
   color: var(--muted);
 }
 
 .lead {
+  margin-top: 14px;
+  max-width: 58ch;
   color: var(--muted);
-  max-width: 40rem;
+  font-size: 18px;
 }
 
 .prose {

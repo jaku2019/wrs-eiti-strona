@@ -7,40 +7,73 @@ defineProps<{
 </script>
 
 <template>
-  <section class="organs section section--surface" aria-labelledby="przedstawiciele-heading">
-    <div class="container">
-      <UiEyebrow>Organy</UiEyebrow>
-      <h2 id="przedstawiciele-heading">Przedstawiciele</h2>
-      <p class="organs__lead">
-        Osoby delegowane przez samorząd do organów wydziałowych i uczelnianych.
-      </p>
-
-      <ul class="organs__list">
-        <li
-          v-for="(item, i) in items"
-          :key="`${item.organ}-${i}`"
-          class="organs__item"
-        >
-          <div class="organs__head">
-            <h3>{{ item.organ }}</h3>
-            <p v-if="item.opis" class="organs__desc">{{ item.opis }}</p>
-          </div>
-          <ul v-if="item.osoby?.length" class="organs__pills">
-            <li v-for="(name, j) in item.osoby" :key="`${name}-${j}`">
-              <span class="pill">{{ name }}</span>
-            </li>
-          </ul>
-          <p v-else class="organs__empty">TODO(treść): brak wskazanych przedstawicieli.</p>
-        </li>
-      </ul>
+  <section
+    class="organs"
+    aria-labelledby="przedstawiciele-heading"
+  >
+    <div class="organs__head">
+      <h2 id="przedstawiciele-heading">
+        Przedstawiciele
+      </h2>
+      <p>Osoby delegowane przez samorząd do organów wydziałowych i uczelnianych.</p>
     </div>
+
+    <ul class="organs__list">
+      <li
+        v-for="(item, i) in items"
+        :key="`${item.organ}-${i}`"
+        class="organ"
+      >
+        <div>
+          <b>{{ item.organ }}</b>
+          <span
+            v-if="item.opis"
+            class="organ__sub"
+          >{{ item.opis }}</span>
+        </div>
+        <ul
+          v-if="item.osoby?.length"
+          class="organ__names"
+        >
+          <li
+            v-for="(name, j) in item.osoby"
+            :key="`${name}-${j}`"
+          >
+            {{ name }}
+          </li>
+        </ul>
+        <p
+          v-else
+          class="organ__sub"
+        >
+          TODO(treść): brak wskazanych przedstawicieli.
+        </p>
+      </li>
+    </ul>
   </section>
 </template>
 
 <style scoped>
-.organs__lead {
-  max-width: 36rem;
-  margin: 0 0 2rem;
+/* mockup: .block + .block-head + .organs/.organ */
+.organs {
+  padding: 36px 0;
+}
+
+.organs__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.organs__head h2 {
+  font-size: 30px;
+}
+
+.organs__head p {
+  margin-left: auto;
+  font-size: 14px;
   color: var(--muted);
 }
 
@@ -49,57 +82,57 @@ defineProps<{
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 1.5rem;
+  gap: 8px;
 }
 
-.organs__item {
+.organ {
   display: grid;
-  gap: 0.85rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: minmax(200px, 1fr) 2fr;
+  gap: 16px;
+  align-items: center;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--surface);
 }
 
-.organs__item:last-child {
-  padding-bottom: 0;
-  border-bottom: 0;
-}
-
-.organs__head h3 {
-  margin: 0 0 0.35rem;
-  font-size: clamp(22px, 2.4vw, 28px);
-}
-
-.organs__desc {
-  margin: 0;
-  color: var(--muted);
+.organ b {
   font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
 }
 
-.organs__pills {
+.organ__sub {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.organ__names {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.45rem;
+  gap: 6px;
 }
 
-.pill {
-  display: inline-flex;
-  align-items: center;
-  min-height: 34px;
-  padding: 0 0.85rem;
-  border-radius: 999px;
+.organ__names li {
+  padding: 3px 9px;
   border: 1px solid var(--line);
+  border-radius: var(--r-sm);
   background: var(--bg);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text);
+  font-size: 13.5px;
 }
 
-.organs__empty {
-  margin: 0;
-  color: var(--muted);
-  font-size: 14px;
+@media (max-width: 700px) {
+  .organ {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .organs__head p {
+    margin-left: 0;
+  }
 }
 </style>
