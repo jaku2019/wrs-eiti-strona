@@ -47,23 +47,30 @@ const metaLine = computed(() => {
   return parts
 })
 
-function withFilterTransition(update: () => void) {
+async function withFilterTransition(update: () => void | Promise<void>) {
   if (
     import.meta.client
     && typeof document.startViewTransition === 'function'
     && !reduced.value
   ) {
-    document.startViewTransition(update)
+    await document.startViewTransition(async () => {
+      await update()
+      await nextTick()
+    }).finished.catch(() => {})
   } else {
-    update()
+    await update()
   }
 }
 
 function setGroup(id: string) {
   if (id === activeGroup.value) return
-  withFilterTransition(() => {
+  void withFilterTransition(() => {
     activeGroup.value = id
   })
+}
+
+function setQuery(value: string) {
+  query.value = value
 }
 </script>
 
@@ -93,7 +100,7 @@ function setGroup(id: string) {
       :model-value="activeGroup"
       :query="query"
       @update:model-value="setGroup"
-      @update:query="query = $event"
+      @update:query="setQuery"
     />
 
     <section class="section section--compact" aria-label="Siatka osób">
