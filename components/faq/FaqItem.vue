@@ -22,13 +22,31 @@ const answerParagraphs = computed(() =>
     .filter(Boolean),
 )
 
+function openDetails() {
+  const el = detailsEl.value
+  if (!el) return
+  el.open = true
+}
+
 watch(
   [() => props.revealToken, detailsEl],
   ([token]) => {
-    if (token == null || !detailsEl.value) return
-    detailsEl.value.open = true
+    if (token == null) return
+    openDetails()
+    // Retry after paint — cold hash loads can race hydration / layout.
+    if (import.meta.client) {
+      requestAnimationFrame(() => openDetails())
+    }
   },
 )
+
+onMounted(() => {
+  if (!import.meta.client) return
+  const hash = window.location.hash.replace(/^#/, '')
+  if (hash && hash === props.pytanie.id) {
+    openDetails()
+  }
+})
 
 function onToggle(event: Event) {
   const el = event.target as HTMLDetailsElement
@@ -47,7 +65,6 @@ async function copyLink() {
       copied.value = false
     }, 1800)
   } catch {
-    // Fallback: still update hash so the link is shareable from the address bar.
     window.location.hash = props.pytanie.id
   }
 }
