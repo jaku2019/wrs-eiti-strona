@@ -23,6 +23,16 @@ Wymagania: Node ≥ 20.
 - Deploy: `.github/workflows/deploy-pages.yml` (bez Facebooka)
 - Treści przykładowe / `TODO(treść)` w `content/`
 
+## Treści i Pages CMS (A3)
+
+- Modele w `content/` (aktualności, baza wiedzy, FAQ, skład, dokumenty, `wydarzenia.yml`, ustawienia)
+- Konfiguracja redakcji: [`.pages.yml`](.pages.yml) → [Pages CMS](https://pagescms.org/)
+- Media: `public/uploads/` (ścieżki `/uploads/…`)
+- Filtr publikacji aktualności: `draft !== true` oraz `date <= czas buildu` — `composables/usePublishedAktualnosci.ts`, `utils/contentFilters.ts`
+- Smoke zapytań: `/_content` (prerender)
+- Kalendarz: `content/wydarzenia.yml` + `TODO(ICS)` w pliku i `utils/calendarSource.ts`
+- Facebook: nadal stub / DRY_RUN (sekcja poniżej) — `facebook.publish` domyślnie wyłączone w CMS
+
 ## Domena (swap github.io → wydziałowa)
 
 1. DNS / GitHub Pages → Custom domain (np. `wrs.elka.pw.edu.pl`).
@@ -75,10 +85,9 @@ Zdjęcia składu: placeholdery z inicjałów (`UiAvatarPlaceholder`) do czasu zg
 
 ## Kolejne kamienie
 
-- **A3** pełne Pages CMS + filtry draft/dat  
-- **A4** strony merytoryczne (home / skład / KB / …)  
+- **A4** strony merytoryczne (home / skład / KB / …; helpery treści A3)  
 - **A5** Pagefind → podpięcie do Ctrl&nbsp;K  
-- **A6** FB produkcyjnie 
+- **A6** FB produkcyjnie
 
 ## Licencja / treść
 

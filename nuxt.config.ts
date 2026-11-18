@@ -108,6 +108,7 @@ export default defineNuxtConfig({
       routes: [
         '/',
         '/_ui',
+        '/_content',
         '/sklad',
         '/faq',
         '/dokumenty',

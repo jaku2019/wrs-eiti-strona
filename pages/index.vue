@@ -74,9 +74,12 @@ const { data: ustawienia } = await useAsyncData('ustawienia-home', () =>
         <h2>Layout A2</h2>
         <p class="muted">
           Navbar (scroll-spy, Priority+, menu kołowe), stopka, Ctrl&nbsp;K, View Transitions.
-          Treści merytoryczne — A3/A4.
+          Treści CMS (A3) + strony merytoryczne (A4).
         </p>
-        <UiLink to="/_ui">Galeria komponentów /_ui</UiLink>
+        <p class="hero__actions">
+          <UiLink to="/_ui">Galeria komponentów /_ui</UiLink>
+          <UiLink to="/_content">Smoke treści /_content</UiLink>
+        </p>
       </div>
     </section>
 

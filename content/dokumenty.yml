@@ -3,3 +3,11 @@ dokumenty:
     typ: regulamin
     data: 2025-10-01
     plik: /uploads/dokumenty/regulamin-wrs.pdf
+  - tytul: "TODO(treść): Przykładowa uchwała"
+    typ: uchwala
+    data: 2026-03-04
+    plik: /uploads/dokumenty/przyklad-uchwala.pdf
+  - tytul: "TODO(treść): Przykładowy protokół"
+    typ: protokol
+    data: 2026-01-15
+    plik: /uploads/dokumenty/przyklad-protokol.pdf

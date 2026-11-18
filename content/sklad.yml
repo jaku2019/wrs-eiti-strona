@@ -1,4 +1,5 @@
-# Skład samorządu — przykładowe / TODO. Zdjęcia = placeholdery z inicjałów (RODO).
+# Skład samorządu — przykładowe / TODO.
+# Zdjęcia: brak ścieżki = placeholder z inicjałów (RODO; UiAvatarPlaceholder / useInitials).
 kadencja: 2025/2026
 aktualizacja: 2026-11-18
 grupy:
@@ -10,7 +11,27 @@ grupy:
   - { id: finanse, label: Finansowa }
   - { id: czlonkowie, label: Członkowie }
 osoby:
-  - { imie: "TODO Imię Nazwisko", funkcja: "Przewodnicząca WRS", grupa: prezydium, kluczowa: true }
-  - { imie: "TODO Imię Nazwisko", funkcja: Członek, grupa: czlonkowie }
+  # Imiona przykładowe (placeholdery) — nie są prawdziwym składem; A7 podmieni na fakty.
+  - imie: "TODO Anna Przykład"
+    funkcja: Przewodnicząca WRS
+    grupa: prezydium
+    kluczowa: true
+    # zdjecie: pominięte → inicjały
+  - imie: "TODO Jan Przykład"
+    funkcja: Wiceprzewodniczący WRS
+    grupa: prezydium
+    kluczowa: true
+  - imie: "TODO Maria Przykład"
+    funkcja: Członek
+    grupa: dydaktyka
+  - imie: "TODO Piotr Przykład"
+    funkcja: Członek
+    grupa: czlonkowie
 przedstawiciele:
-  - { organ: "Rada Wydziału EiTI", opis: "TODO(treść): opis mandatu", osoby: [] }
+  - organ: Rada Wydziału EiTI
+    opis: "TODO(treść): opis mandatu / głos"
+    osoby:
+      - "TODO Anna Przykład"
+  - organ: Parlament Samorządu Studentów PW
+    opis: "TODO(treść): opis mandatu"
+    osoby: []
