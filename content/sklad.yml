@@ -21,14 +21,13 @@ osoby:
     grupa: prezydium
     kluczowa: true
   - imie: TODO Jan Przykład
-    funkcja: Wiceprzewodniczący WRS
     grupa: prezydium
-    kluczowa: true
-  - imie: TODO Maria Przykład
+    kluczowa: false
+  - imie: TODO
     funkcja: Członek
     grupa: dydaktyka
     kluczowa: false
-  - imie: TODO Piotr Przykład
+  - imie: TODO
     funkcja: Członek
     grupa: czlonkowie
     kluczowa: false
