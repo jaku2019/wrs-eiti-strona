@@ -1,37 +1,40 @@
-# Skład samorządu — przykładowe / TODO.
-# Zdjęcia: brak ścieżki = placeholder z inicjałów (RODO; UiAvatarPlaceholder / useInitials).
 kadencja: 2025/2026
 aktualizacja: 2026-11-18
 grupy:
-  - { id: prezydium, label: Prezydium }
-  - { id: dydaktyka, label: Dydaktyczna }
-  - { id: socjalna, label: Socjalno-Bytowa }
-  - { id: kultura, label: Kultury i Sportu }
-  - { id: promocja, label: Promocji }
-  - { id: finanse, label: Finansowa }
-  - { id: czlonkowie, label: Członkowie }
+  - id: prezydium
+    label: Prezydium
+  - id: dydaktyka
+    label: Dydaktyczna
+  - id: socjalna
+    label: Socjalno-Bytowa
+  - id: kultura
+    label: Kultury i Sportu
+  - id: promocja
+    label: Promocji
+  - id: finanse
+    label: Finansowa
+  - id: czlonkowie
+    label: Członkowie
 osoby:
-  # Imiona przykładowe (placeholdery) — nie są prawdziwym składem; A7 podmieni na fakty.
-  - imie: "TODO Anna Przykład"
-    funkcja: Przewodnicząca WRS
+  - imie: Ernest Łukaszek
+    funkcja: Przewodniczący WRS
     grupa: prezydium
     kluczowa: true
-    # zdjecie: pominięte → inicjały
-  - imie: "TODO Jan Przykład"
-    funkcja: Wiceprzewodniczący WRS
+  - imie: TODO Jan Przykład
     grupa: prezydium
-    kluczowa: true
-  - imie: "TODO Maria Przykład"
+    kluczowa: false
+  - imie: TODO
     funkcja: Członek
     grupa: dydaktyka
-  - imie: "TODO Piotr Przykład"
+    kluczowa: false
+  - imie: TODO
     funkcja: Członek
     grupa: czlonkowie
+    kluczowa: false
 przedstawiciele:
   - organ: Rada Wydziału EiTI
     opis: "TODO(treść): opis mandatu / głos"
     osoby:
-      - "TODO Anna Przykład"
+      - TODO Anna Przykład
   - organ: Parlament Samorządu Studentów PW
     opis: "TODO(treść): opis mandatu"
-    osoby: []

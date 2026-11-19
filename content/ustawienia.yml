@@ -1,19 +1,16 @@
-# Ustawienia globalne strony (kontakt, social, hero, liczniki).
-# TODO(treść): uzupełnić prawdziwe dane WRS.
-
 kontakt:
   email: "TODO(treść): email@example.pw.edu.pl"
-
 social:
-  # TODO(treść): oficjalny URL strony FB WRS
-  facebook: "https://www.facebook.com/"
-
+  facebook: https://www.facebook.com/wrseitipw
 hero:
-  tytul: "Wiemy, jak to działa."
-  opis: "TODO(treść): jedno zdanie — student EiTI wie, gdzie załatwić sprawę."
-
+  tytul: Wiemy, jak to działa.
+  opis: W WRS-ie pomożemy Ci z formalnościami.
 liczniki:
-  - { etykieta: "Członkowie samorządu", wartosc: 0 }
-  - { etykieta: "Komisje", wartosc: 0 }
-  - { etykieta: "TODO(treść): uchwały w roku", wartosc: 0 }
-  - { etykieta: "Artykuły w bazie", wartosc: 0 }
+  - etykieta: Członkowie samorządu
+    wartosc: 0
+  - etykieta: Komisje
+    wartosc: 0
+  - etykieta: "TODO(treść): uchwały w roku"
+    wartosc: 0
+  - etykieta: Artykuły w bazie
+    wartosc: 0
