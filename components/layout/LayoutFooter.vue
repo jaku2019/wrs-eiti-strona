@@ -210,6 +210,7 @@ const year = new Date().getFullYear()
 .footer__legal a,
 .footer__legal a:hover {
   color: inherit;
+  cursor: auto;
 }
 
 .footer__muted {
