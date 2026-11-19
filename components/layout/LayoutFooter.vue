@@ -207,6 +207,11 @@ const year = new Date().getFullYear()
   color: #9897a8;
 }
 
+.footer__legal a,
+.footer__legal a:hover {
+  color: inherit;
+}
+
 .footer__muted {
   color: #6f6e7e;
 }
