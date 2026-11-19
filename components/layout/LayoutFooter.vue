@@ -93,7 +93,7 @@ const year = new Date().getFullYear()
 
     <div class="container footer__legal">
       <p>
-        © {{ year }} WRS WEiTI.
+        © {{ year }} <a href="https://polibudex.com.pl/" target="_blank" rel="noopener">Polibudex</a>.
         <span class="footer__muted">Strona statyczna — bez cookies i trackerów.</span>
       </p>
     </div>
