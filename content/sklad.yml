@@ -1,5 +1,5 @@
 kadencja: 2025/2026
-aktualizacja: 2026-11-18
+aktualizacja: 2026-11-19
 grupy:
   - id: prezydium
     label: Prezydium
@@ -27,7 +27,55 @@ osoby:
     funkcja: Członek
     grupa: dydaktyka
     kluczowa: false
-  - imie: TODO
+  - imie: Jakub Solecki
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Oskar Sałata
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Kseniia Biloblovska
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Kacper Grębosz
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Magdalena Sałuda
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Yevhenii Marienko
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Tomasz Nguyen Chuong
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Tomasz Olczak
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Konrad Kubicki
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Jakub Tatarski
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Zuzanna Górecka
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Arina Makhnach
+    funkcja: Członek
+    grupa: czlonkowie
+    kluczowa: false
+  - imie: Zofia Wiśniewska
     funkcja: Członek
     grupa: czlonkowie
     kluczowa: false

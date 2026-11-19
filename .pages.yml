@@ -163,7 +163,6 @@ content:
             label: Funkcja
             type: string
             default: Członek
-            description: "Szeregowa osoba = „Członek” (bez feminatywów / nazwy komisji)."
           - name: grupa
             label: Grupa
             type: select
