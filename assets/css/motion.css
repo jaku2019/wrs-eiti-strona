@@ -35,6 +35,49 @@
     }
   }
 
+  /* Mobile menu → page: the open sheet collapses into the „Menu” button
+     while the new page fades in underneath. */
+  ::view-transition-group(nav-sheet) {
+    animation: none;
+  }
+
+  ::view-transition-old(nav-sheet) {
+    animation: vt-sheet-out 0.45s var(--ease) both;
+  }
+
+  html.vt-from-sheet::view-transition-old(site-main),
+  html.vt-from-sheet::view-transition-old(site-footer) {
+    animation: none;
+    opacity: 0;
+  }
+
+  @keyframes vt-sheet-out {
+    from {
+      clip-path: circle(150% at calc(100% - 2.5rem) 0);
+    }
+    to {
+      clip-path: circle(0 at calc(100% - 2.5rem) 0);
+    }
+  }
+
+  /* Theme switch (useTheme adds .theme-vt): one circular reveal over the
+     whole page. Named groups would otherwise run their page-transition
+     animations and paint above the root (e.g. page content over the open
+     mobile menu). */
+  html.theme-vt * {
+    view-transition-name: none !important;
+  }
+
+  html.theme-vt::view-transition-old(root),
+  html.theme-vt::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  html.theme-vt::view-transition-new(root) {
+    z-index: 1;
+  }
+
 
   /* mockup: .reveal — sekcje wjeżdżają przy wejściu w widok (scroll-driven) */
   @supports (animation-timeline: view()) {

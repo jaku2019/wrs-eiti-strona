@@ -24,10 +24,14 @@ const isOpen = computed({
   set: (v: boolean) => emit('update:open', v),
 })
 
+const route = useRoute()
+const router = useRouter()
+const nuxtApp = useNuxtApp()
+
 function isActive(item: PriorityNavItem) {
   if (!props.activeHref) return false
   if (item.kind === 'section') {
-    return props.activeHref === item.href || props.activeHref.endsWith(item.href)
+    return props.activeHref === `#${item.id}`
   }
   return props.activeHref === item.href || props.activeHref.startsWith(`${item.href}/`)
 }
@@ -58,7 +62,42 @@ function toggleDesktopFallback(event: MouseEvent) {
   isOpen.value = !isOpen.value
 }
 
-function onItemClick() {
+/**
+ * Mobile: a click that changes the page keeps the sheet open — the navbar
+ * closes it on route change, i.e. inside the page view transition, so the
+ * sheet leaves as one animation (::view-transition-old(nav-sheet)) instead
+ * of its clip-path collapse fighting the page crossfade.
+ */
+const navigating = ref(false)
+const instantClose = ref(false)
+
+function onItemClick(item: PriorityNavItem, event: MouseEvent) {
+  const modified = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0
+  if (
+    props.mobile &&
+    !modified &&
+    !item.href.startsWith('#') &&
+    'startViewTransition' in document &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    router.resolve(item.href).fullPath !== route.fullPath
+  ) {
+    navigating.value = true
+    // The old page sat hidden under the sheet — don't let it fade through.
+    const root = document.documentElement
+    root.classList.add('vt-from-sheet')
+    nuxtApp.hooks.hookOnce('page:view-transition:start', (transition) => {
+      transition.finished.catch(() => {}).finally(() => root.classList.remove('vt-from-sheet'))
+    })
+    // Safety net: navigation blocked or failed → close the usual way.
+    window.setTimeout(() => {
+      root.classList.remove('vt-from-sheet')
+      if (navigating.value) {
+        navigating.value = false
+        close()
+      }
+    }, 2000)
+    return
+  }
   close()
 }
 
@@ -75,6 +114,13 @@ watch(
   (open) => {
     if (!import.meta.client || !props.mobile) return
     document.body.style.overflow = open ? 'hidden' : ''
+    if (!open && navigating.value) {
+      navigating.value = false
+      instantClose.value = true
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        instantClose.value = false
+      }))
+    }
   },
 )
 
@@ -120,25 +166,24 @@ defineExpose({ moreBtn, sheet })
     >
       <ul class="more__list" role="list">
         <li v-for="item in items" :key="item.id">
-          <NuxtLink
-            v-if="item.kind === 'page'"
-            :to="item.href"
-            class="more__link"
-            :aria-current="isActive(item) ? 'page' : undefined"
-            @click="onItemClick"
-          >
-            <span>{{ item.label }}</span>
-            <UiIcon name="externalLink" :size="14" />
-          </NuxtLink>
           <a
-            v-else
+            v-if="item.href.startsWith('#')"
             :href="item.href"
             class="more__link"
             :aria-current="isActive(item) ? 'true' : undefined"
-            @click="onItemClick"
+            @click="onItemClick(item, $event)"
           >
             {{ item.label }}
           </a>
+          <NuxtLink
+            v-else
+            :to="item.href"
+            class="more__link"
+            :aria-current="isActive(item) ? (item.kind === 'page' ? 'page' : 'true') : undefined"
+            @click="onItemClick(item, $event)"
+          >
+            {{ item.label }}
+          </NuxtLink>
         </li>
       </ul>
     </div>
@@ -159,11 +204,12 @@ defineExpose({ moreBtn, sheet })
       <UiIcon :name="isOpen ? 'x' : 'menu'" :size="18" />
     </button>
 
+    <Teleport to="body">
     <div
       id="nav-mobile-sheet"
       ref="sheet"
       class="mobile__sheet"
-      :class="{ 'mobile__sheet--open': isOpen }"
+      :class="{ 'mobile__sheet--open': isOpen, 'mobile__sheet--instant': instantClose }"
       role="dialog"
       aria-modal="true"
       aria-label="Menu nawigacji"
@@ -177,29 +223,29 @@ defineExpose({ moreBtn, sheet })
             class="mobile__item"
             :style="{ '--i': index }"
           >
-            <NuxtLink
-              v-if="item.kind === 'page'"
-              :to="item.href"
-              class="mobile__link"
-              :aria-current="isActive(item) ? 'page' : undefined"
-              @click="onItemClick"
-            >
-              {{ item.label }}
-              <UiIcon name="arrowRight" :size="22" />
-            </NuxtLink>
             <a
-              v-else
+              v-if="item.href.startsWith('#')"
               :href="item.href"
               class="mobile__link"
               :aria-current="isActive(item) ? 'true' : undefined"
-              @click="onItemClick"
+              @click="onItemClick(item, $event)"
             >
               {{ item.label }}
             </a>
+            <NuxtLink
+              v-else
+              :to="item.href"
+              class="mobile__link"
+              :aria-current="isActive(item) ? (item.kind === 'page' ? 'page' : 'true') : undefined"
+              @click="onItemClick(item, $event)"
+            >
+              {{ item.label }}
+            </NuxtLink>
           </li>
         </ul>
       </nav>
     </div>
+    </Teleport>
   </div>
 </template>
 
@@ -308,29 +354,42 @@ defineExpose({ moreBtn, sheet })
   z-index: 60;
 }
 
+/* Teleported to <body>: the header's backdrop-filter would otherwise make it
+   the containing block and clip the sheet to the 68px bar. Sits under the
+   sticky header (z 50) so the „Zamknij” toggle stays visible. */
 .mobile__sheet {
   position: fixed;
-  inset: 0;
-  z-index: 55;
+  inset: 68px 0 0;
+  z-index: 45;
   display: grid;
-  align-content: center;
-  padding: 5rem var(--gutter) 2rem;
+  align-content: safe center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1.5rem var(--gutter) 2rem;
   background: var(--bg);
-  clip-path: circle(0 at calc(100% - 2.5rem) 2rem);
+  clip-path: circle(0 at calc(100% - 2.5rem) 0);
   transition: clip-path 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   pointer-events: none;
   visibility: hidden;
 }
 
 .mobile__sheet--open {
-  clip-path: circle(150% at calc(100% - 2.5rem) 2rem);
+  clip-path: circle(150% at calc(100% - 2.5rem) 0);
   pointer-events: auto;
   visibility: visible;
+  /* own snapshot in page view transitions (animated in motion.css) */
+  view-transition-name: nav-sheet;
+}
+
+/* closed by a route change inside a view transition — the snapshot animates */
+.mobile__sheet--instant,
+.mobile__sheet--instant .mobile__item {
+  transition: none;
 }
 
 @starting-style {
   .mobile__sheet--open {
-    clip-path: circle(0 at calc(100% - 2.5rem) 2rem);
+    clip-path: circle(0 at calc(100% - 2.5rem) 0);
   }
 }
 

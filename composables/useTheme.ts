@@ -56,9 +56,12 @@ export function useTheme() {
         Math.max(x, window.innerWidth - x),
         Math.max(y, window.innerHeight - y),
       )
+      const root = document.documentElement
+      root.classList.add('theme-vt')
       const transition = (document as Document & {
-        startViewTransition: (cb: () => void) => { ready: Promise<void> }
+        startViewTransition: (cb: () => void) => { ready: Promise<void>; finished: Promise<void> }
       }).startViewTransition(run)
+      transition.finished.catch(() => {}).finally(() => root.classList.remove('theme-vt'))
 
       transition.ready.then(() => {
         document.documentElement.animate(
@@ -69,8 +72,8 @@ export function useTheme() {
             ],
           },
           {
-            duration: 420,
-            easing: 'ease-out',
+            duration: 560,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
             pseudoElement: '::view-transition-new(root)',
           },
         )
